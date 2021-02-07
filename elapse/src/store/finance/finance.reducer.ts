@@ -3,15 +3,7 @@ import { addCashFlowEntry, removeCashFlowEntry } from "./finance.actions";
 import { FinanceState } from "./finance.state";
 
 const initialFinanceState: FinanceState = {
-  cashFlow: [
-    {
-      description: 'Lohn',
-      startDate: new Date(),
-      amount: { amount: 3000, currency: 'CHF' },
-      recurrence: { type: 'continuous', repetition: 'MONTH' },
-      amortization: { timeFrame: 'MONTH', fn: 'linear' },
-    }
-  ]
+  cashFlow: []
 }
 
 export const FinanceReducer = createReducer(initialFinanceState, (builder) => {

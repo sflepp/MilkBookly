@@ -1,16 +1,20 @@
+import { MonetaryAmount } from "../../model/MonetaryAmount.model";
+import { TimeFrame } from "../../model/TimeFrame.model";
+
 export interface FinanceState {
   cashFlow: CashFlowEntry[]
 }
 
 export interface CashFlowEntry {
   description: string
+  type: 'wage'
   startDate: Date,
   amount: MonetaryAmount,
   recurrence: Recurrence
-  amortization: Amortization
+  retention: Retention
 }
 
-export interface Amortization {
+export interface Retention {
   timeFrame: TimeFrame
   fn: 'linear'
 }
@@ -25,13 +29,6 @@ export interface ContinuousRecurrence {
   type: 'continuous'
   repetition: TimeFrame
 }
-
-export interface MonetaryAmount {
-  amount: number,
-  currency: string
-}
-
-export type TimeFrame = 'YEAR' | 'MONTH' | 'WEEK' | 'DAY'
 
 
 
