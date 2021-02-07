@@ -1,0 +1,7 @@
+{
+  "name": "elapse",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
