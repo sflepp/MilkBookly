@@ -65,10 +65,7 @@ const WizardWage: React.FC = () => {
             name="amount"
             control={ control }
             render={ ({ onChange, value }) =>
-                <IonItem>
-                  <IonLabel position="floating">Wert</IonLabel>
-                  <MonetaryInput value={ value } onChange={ onChange }/>
-                </IonItem>
+                <MonetaryInput value={ value } onChange={ onChange }/>
             }
         />
         <Controller
@@ -76,7 +73,7 @@ const WizardWage: React.FC = () => {
             control={ control }
             render={ ({ onChange, value }) =>
                 <IonItem>
-                  <IonLabel position="floating">Wiederholung</IonLabel>
+                  <IonLabel>Wiederholung</IonLabel>
                   <TimeFrameInput value={ value } onChange={ onChange }/>
                 </IonItem>
             }
