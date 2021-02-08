@@ -39,8 +39,8 @@ const WizardWage: React.FC = () => {
   const onSubmit = (data: FormData) => {
     store.dispatch(addCashFlowEntry({
       description: 'Lohn',
-      type: 'wage',
-      startDate: new Date(),
+      type: 'income',
+      category: 'wage',
       amount: data.amount,
       recurrence: {
         type: 'continuous',

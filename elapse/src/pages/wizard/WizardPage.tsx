@@ -17,7 +17,7 @@ const mapStateToProps = (state: RootState) => {
 
 const WizardPage: React.FC<Props> = (props) => {
 
-  const hasWage = props.cashFlow.some((c) => c.type === 'wage')
+  const hasWage = props.cashFlow.some((c) => c.category === 'wage')
 
 
   return (

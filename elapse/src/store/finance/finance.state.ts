@@ -1,18 +1,23 @@
 import { MonetaryAmount } from "../../model/MonetaryAmount.model";
 import { TimeFrame } from "../../model/TimeFrame.model";
+import { CashFlowEntryType } from "../../model/CashFlowEntryType.model";
+import { CashFlowEntryCategory } from "../../model/CashFlowEntryCategory.model";
 
 export interface FinanceState {
   cashFlow: CashFlowEntry[]
 }
 
 export interface CashFlowEntry {
+  id?: UUID
   description: string
-  type: 'wage'
-  startDate: Date,
+  category: CashFlowEntryCategory
+  type: CashFlowEntryType
   amount: MonetaryAmount,
   recurrence: Recurrence
   retention: Retention
 }
+
+export type UUID = string
 
 export interface Retention {
   timeFrame: TimeFrame

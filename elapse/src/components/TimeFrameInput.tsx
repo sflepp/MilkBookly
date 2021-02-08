@@ -1,6 +1,5 @@
 import { IonSelect, IonSelectOption } from '@ionic/react';
 import React from 'react';
-import './TimeFrameInput.css';
 import { SelectChangeEventDetail } from "@ionic/core";
 import { AllTimeFrames, TimeFrame, TimeFrameTranslations } from "../model/TimeFrame.model";
 

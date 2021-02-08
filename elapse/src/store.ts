@@ -1,9 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { applyMiddleware, createStore } from "@reduxjs/toolkit";
 import rootReducer from "./store/reducer";
 
-const store = configureStore({
-  reducer: rootReducer
-});
+import { load, save } from "redux-localstorage-simple"
+
+const createStoreWithMiddleware
+    = applyMiddleware(
+    save() // Saving done here
+)(createStore)
+
+const store = createStoreWithMiddleware(
+    rootReducer,
+    load() // Loading done here
+)
 
 if (process.env.NODE_ENV === "development" && module.hot) {
   module.hot.accept("./store/reducer", () => {
