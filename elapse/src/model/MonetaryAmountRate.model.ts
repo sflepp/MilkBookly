@@ -51,5 +51,9 @@ const currentTimeFrameSeconds = (timeFrame: TimeFrame) => {
       return 3600 * 24;
     case "HOUR":
       return 3600;
+    case "MINUTE":
+      return 60
+    case "SECOND":
+      return 1;
   }
 }

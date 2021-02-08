@@ -23,8 +23,7 @@ const CashFlowEntryTypeInput: React.FC<Props> = (props) => {
 
   return (
       <IonSelect value={ props.value || defaultValue }
-                 okText="OK"
-                 cancelText="Abbrechen"
+                 interface="action-sheet"
                  onIonChange={ onCurrencyChange }>
         { AllCashFlowEntryTypes.map(c =>
             <IonSelectOption key={ c } value={ c }>{ AllCashFlowEntryTypeTranslations[c] }</IonSelectOption>

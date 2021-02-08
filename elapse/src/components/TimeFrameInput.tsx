@@ -19,8 +19,7 @@ const TimeFrameInput: React.FC<Props> = (props) => {
 
   return (
       <IonSelect value={ props.value || defaultValue }
-                 okText="OK"
-                 cancelText="Abbrechen"
+                 interface="action-sheet"
                  onIonChange={ onCurrencyChange }>
         { AllTimeFrames.map(c =>
             <IonSelectOption key={ c } value={ c }>{ TimeFrameTranslations[c] }</IonSelectOption>

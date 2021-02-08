@@ -1,5 +1,6 @@
 .monetary-input {
     display: flex;
+    float: right;
+    text-align: right;
+    width: 50%;
 }
-
-

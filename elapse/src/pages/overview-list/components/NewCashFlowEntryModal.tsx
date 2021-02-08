@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
@@ -12,7 +18,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/react';
-import { checkmark } from "ionicons/icons";
+import { checkmark, close, pin } from "ionicons/icons";
 import { Controller, useForm } from "react-hook-form";
 import MonetaryInput from "../../../components/MonetaryInput";
 import TimeFrameInput from "../../../components/TimeFrameInput";
@@ -35,6 +41,8 @@ interface FormData {
 }
 
 const NewCashFlowEntryModal: React.FC<Props> = (props) => {
+
+  const [ title, setTitle ] = useState<string>();
   const { handleSubmit, control } = useForm<FormData>({
     defaultValues: {
       description: '',
@@ -48,7 +56,6 @@ const NewCashFlowEntryModal: React.FC<Props> = (props) => {
   });
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
     store.dispatch(addCashFlowEntry({
       description: data.description,
       type: data.type,
@@ -74,55 +81,73 @@ const NewCashFlowEntryModal: React.FC<Props> = (props) => {
             <IonHeader>
               <IonToolbar>
                 <IonTitle>Neuer Eintrag</IonTitle>
+                <IonButtons slot="end">
+                  <IonButton onClick={ props.onClose }>
+                    <IonIcon icon={ close }/>
+                  </IonButton>
+                </IonButtons>
               </IonToolbar>
             </IonHeader>
             <IonContent>
-              <form onSubmit={ handleSubmit(onSubmit) }>
-                <Controller
-                    name="description"
-                    control={ control }
-                    render={ ({ onChange, value }) =>
-                        <IonItem>
-                          <IonLabel position="floating">Beschreibung</IonLabel>
-                          <IonInput value={ value } onIonChange={ (e) => onChange(e.detail.value!) }/>
-                        </IonItem>
-                    }
-                />
-                <Controller
-                    name="type"
-                    control={ control }
-                    render={ ({ onChange, value }) =>
-                        <IonItem>
-                          <IonLabel position="floating">Typ</IonLabel>
-                          <CashFlowEntryTypeInput value={ value } onChange={ onChange }/>
-                        </IonItem>
-                    }
-                />
-                <Controller
-                    name="amount"
-                    control={ control }
-                    render={ ({ onChange, value }) =>
-                        <IonItem>
-                          <IonLabel position="floating">Wert</IonLabel>
-                          <MonetaryInput value={ value } onChange={ onChange }/>
-                        </IonItem>
-                    }
-                />
-                <Controller
-                    name="period"
-                    control={ control }
-                    render={ ({ onChange, value }) =>
-                        <IonItem>
-                          <IonLabel position="floating">Wiederholung</IonLabel>
-                          <TimeFrameInput value={ value } onChange={ onChange }/>
-                        </IonItem>
-                    }
-                />
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardSubtitle>Wiederholend</IonCardSubtitle>
+                  <IonCardTitle>{title || 'Beschreibung'}</IonCardTitle>
+                </IonCardHeader>
 
-                <IonButton type="submit" className="ok-button">
-                  <IonIcon slot="icon-only" icon={ checkmark }/>
-                </IonButton>
-              </form>
+                <IonCardContent>
+                  <form onSubmit={ handleSubmit(onSubmit) }>
+                    <Controller
+                        name="description"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <IonItem>
+                              <IonLabel>Beschreibung</IonLabel>
+                              <IonInput style={ { textAlign: 'right' } } value={ value }
+                                        onIonChange={ (e) => {
+                                          setTitle(e.detail.value!)
+                                          onChange(e.detail.value!)
+                                        } }/>
+                            </IonItem>
+                        }
+                    />
+                    <Controller
+                        name="type"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <IonItem>
+                              <IonLabel>Typ</IonLabel>
+                              <CashFlowEntryTypeInput value={ value } onChange={ onChange }/>
+                            </IonItem>
+                        }
+                    />
+                    <Controller
+                        name="amount"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <MonetaryInput value={ value } onChange={ onChange }/>
+                        }
+                    />
+                    <Controller
+                        name="period"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <IonItem>
+                              <IonLabel>Wiederholung</IonLabel>
+                              <TimeFrameInput value={ value } onChange={ onChange }/>
+                            </IonItem>
+                        }
+                    />
+
+                    <IonButton type="submit" className="ok-button">
+                      Hinzufügen
+                    </IonButton>
+                  </form>
+                </IonCardContent>
+              </IonCard>
+
+
+
             </IonContent>
           </IonPage>
         </IonModal>

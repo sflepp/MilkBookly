@@ -1,7 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, } from '@ionic/react';
+import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { barChart, colorWand, list, square } from 'ionicons/icons';
+import { barChart, cogOutline, colorWand, pulseOutline, reader, readerOutline } from 'ionicons/icons';
 import Tab3 from './pages/Tab3';
 
 /* Core CSS required for Ionic components to work properly */
@@ -24,20 +24,25 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import WizardPage from "./pages/wizard/WizardPage";
 import OverviewListPage from "./pages/overview-list/OverviewListPage";
+import SettingsPage from "./pages/settings/SettingsPage";
 
 const App: React.FC = () => (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/overview-list">
-              <OverviewListPage/>
-            </Route>
+
             <Route exact path="/wizard">
               <WizardPage/>
             </Route>
             <Route path="/chart">
               <Tab3/>
+            </Route>
+            <Route exact path="/overview-list">
+              <OverviewListPage/>
+            </Route>
+            <Route exact path="/settings">
+              <SettingsPage/>
             </Route>
             <Route exact path="/">
               <Redirect to="/wizard"/>
@@ -48,10 +53,13 @@ const App: React.FC = () => (
               <IonIcon icon={ colorWand }/>
             </IonTabButton>
             <IonTabButton tab="chart" href="/chart">
-              <IonIcon icon={ barChart }/>
+              <IonIcon icon={ pulseOutline }/>
             </IonTabButton>
             <IonTabButton tab="overview-list" href="/overview-list">
-              <IonIcon icon={ list }/>
+              <IonIcon icon={ readerOutline }/>
+            </IonTabButton>
+            <IonTabButton tab="settings" href="/settings">
+              <IonIcon icon={ cogOutline }/>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import {
+  IonActionSheet,
   IonButton,
   IonButtons,
   IonContent,
@@ -17,33 +18,35 @@ import {
 import { CashFlowEntry } from "../../store/finance/finance.state";
 import { RootState } from "../../store/reducer";
 import { rate } from "../../model/MonetaryAmountRate.model";
-import { add } from "ionicons/icons";
+import { add, repeat, returnDownBack } from "ionicons/icons";
 import NewCashFlowEntryModal from "./components/NewCashFlowEntryModal";
 import CashFlowListEntry from "./components/CashFlowListEntry";
+import { TimeFrame } from "../../model/TimeFrame.model";
 
 interface Props {
   cashFlow: CashFlowEntry[]
+  preferredTimeFrame: TimeFrame
 }
 
 const mapStateToProps = (state: RootState) => {
   return {
-    cashFlow: state.finance.cashFlow
+    cashFlow: state.finance.cashFlow,
+    preferredTimeFrame: state.settings.preferredTimeFrame
   }
 }
 
 const OverviewListPage: React.FC<Props> = (props) => {
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<'one-time' | 'continuous' | undefined>();
+  const [showActionSheet, setShowActionSheet] = useState<boolean>(false);
   const [searchText, setSearchText] = useState('');
-
-  const timeFrame = 'DAY';
 
   const filtered = searchText !== '' ? props.cashFlow.filter(e => e.description.includes(searchText)) : props.cashFlow;
 
   const entries = filtered
       .map((c) => {
         return {
-          rate: rate(timeFrame, c),
+          rate: rate(props.preferredTimeFrame, c),
           entry: c
         }
       })
@@ -53,19 +56,19 @@ const OverviewListPage: React.FC<Props> = (props) => {
   const expense = entries.filter(c => c.entry.type === 'expense');
 
   return <IonPage>
-    { showModal && <NewCashFlowEntryModal onClose={ () => setShowModal(false) }/> }
+    { showModal === 'continuous' && <NewCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Übersicht</IonTitle>
+        <IonTitle>Finanzdaten</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent fullscreen>
       <IonHeader collapse="condense">
         <IonToolbar>
-          <IonTitle size="large">Übersicht</IonTitle>
+          <IonTitle size="large">Finanzdaten</IonTitle>
           <IonButtons slot="primary">
             <IonButton onClick={ () => {
-              setShowModal(true)
+              setShowActionSheet(true)
             } }>
               <IonIcon slot="icon-only" icon={ add }/>
             </IonButton>
@@ -80,7 +83,8 @@ const OverviewListPage: React.FC<Props> = (props) => {
           <IonLabel>Einnahmen</IonLabel>
         </IonListHeader>
         { income.map((e) =>
-            <CashFlowListEntry key={e.entry.id} others={ filtered } timeFrame={ timeFrame } entry={ e.entry } rate={ e.rate }/>)
+            <CashFlowListEntry key={ e.entry.id } others={ filtered } timeFrame={ props.preferredTimeFrame } entry={ e.entry }
+                               rate={ e.rate }/>)
         }
       </IonList>) }
       { expense.length > 0 && (<IonList>
@@ -88,9 +92,36 @@ const OverviewListPage: React.FC<Props> = (props) => {
           <IonLabel>Ausgaben</IonLabel>
         </IonListHeader>
         { expense.map((e) =>
-            <CashFlowListEntry key={e.entry.id} others={ filtered } timeFrame={ timeFrame } entry={ e.entry } rate={ e.rate }/>)
+            <CashFlowListEntry key={ e.entry.id } others={ filtered } timeFrame={ props.preferredTimeFrame } entry={ e.entry }
+                               rate={ e.rate }/>)
         }
       </IonList>) }
+
+
+      <IonActionSheet
+          isOpen={ showActionSheet }
+          onDidDismiss={ () => setShowActionSheet(false) }
+          buttons={ [{
+            text: 'Wiederholend',
+            icon: repeat,
+            handler: () => {
+              setShowModal('continuous');
+            }
+          }, {
+            text: 'Einmalig',
+            icon: returnDownBack,
+            handler: () => {
+              setShowModal('one-time');
+            }
+          }, {
+            text: 'Abbrechen',
+            role: 'cancel',
+            handler: () => {
+              setShowActionSheet(false)
+            }
+          }] }
+      >
+      </IonActionSheet>
     </IonContent>
   </IonPage>
 }

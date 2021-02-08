@@ -23,7 +23,6 @@ const IncomeRate: React.FC<Props> = (props) => {
   return (
       <>
         <span className="rate-badge" style={ { color: color, fontSize: '0.75em' } }>
-          { props.cashFlow.type === 'income' ? '+' : '-' }
           { incomeRate.amount.toFixed(2) } &nbsp;
           <span className="frac">
             <sup>{ incomeRate.currency }</sup>
