@@ -40,7 +40,7 @@ interface FormData {
   amount: MonetaryAmount
 }
 
-const NewCashFlowEntryModal: React.FC<Props> = (props) => {
+const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
 
   const [ title, setTitle ] = useState<string>();
   const { handleSubmit, control } = useForm<FormData>({
@@ -145,9 +145,6 @@ const NewCashFlowEntryModal: React.FC<Props> = (props) => {
                   </form>
                 </IonCardContent>
               </IonCard>
-
-
-
             </IonContent>
           </IonPage>
         </IonModal>
@@ -155,4 +152,4 @@ const NewCashFlowEntryModal: React.FC<Props> = (props) => {
   );
 };
 
-export default NewCashFlowEntryModal
+export default NewContinuousCashFlowEntryModal

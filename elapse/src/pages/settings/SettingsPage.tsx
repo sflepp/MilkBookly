@@ -1,9 +1,4 @@
 import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonItem,
@@ -12,21 +7,40 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
+  IonToggle,
   IonToolbar
 } from '@ionic/react';
-import React from 'react';
+import React, { useState } from 'react';
 import './SettingsPage.css';
 import { connect } from "react-redux";
 import { RootState } from "../../store/reducer";
-import { SettingsState } from "../../store/settings/settings.state";
-import { AllCurrencies } from "../../model/MonetaryAmount.model";
+import { AllCurrencies, Currency } from "../../model/MonetaryAmount.model";
 import store from "../../store";
-import { setPreferredCurrency, setPreferredTimeFrame } from "../../store/settings/settings.actions";
-import { AllTimeFrames, TimeFrameTranslations2 } from "../../model/TimeFrame.model";
+import {
+  setPreferredCurrency,
+  setPreferredTimeFrame,
+  setShowTip,
+  setShowWizard
+} from "../../store/settings/settings.actions";
+import { AllTimeFrames, TimeFrame, TimeFrameTranslations2 } from "../../model/TimeFrame.model";
 
-const mapStateToProps = (state: RootState) => state.settings;
+interface Props {
+  showWizard: boolean,
+  showTip: boolean,
+  preferredCurrency: Currency,
+  preferredTimeFrame: TimeFrame
+}
 
-const SettingsPage: React.FC<SettingsState> = (props) => {
+const mapStateToProps = (state: RootState) => {
+  return {
+    showWizard: state.settings.showWizard,
+    showTip: state.settings.showTip,
+    preferredCurrency: state.settings.preferredCurrency,
+    preferredTimeFrame: state.settings.preferredTimeFrame
+  }
+}
+
+const SettingsPage: React.FC<Props> = (props) => {
   return (
       <IonPage>
         <IonHeader>
@@ -41,7 +55,7 @@ const SettingsPage: React.FC<SettingsState> = (props) => {
             </IonToolbar>
           </IonHeader>
 
-          <IonItem style={ { marginTop: '16px' } }>
+          <IonItem>
             <IonLabel>Währung</IonLabel>
             <IonSelect value={ props.preferredCurrency }
                        interface="action-sheet"
@@ -61,21 +75,22 @@ const SettingsPage: React.FC<SettingsState> = (props) => {
             </IonSelect>
           </IonItem>
 
-          <IonCard style={ { marginTop: '32px' } }>
-            <IonCardHeader>
-              <IonCardTitle>Trinkgeld ❤️</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Diese App ist kostenlos, verwendet kein Tracking und blendet keine
-              Werbung ein. Das wird auch immer so bleiben.
-              <br/><br/>
-              Wenn dir diese App gefällt und sie dir etwas bringt, würde sich der Entwickler
-              dieser App über ein kleines Trinkgeld freuen.
+          <IonItem>
+            <IonLabel>Wizard anzeigen</IonLabel>
+            <IonToggle slot="end" checked={ props.showWizard }
+                       onIonChange={ (e) => {
+                         const checked = e.detail.checked
+                         if (checked !== props.showWizard) {
+                           store.dispatch(setShowWizard(e.detail.checked))
+                         }
+                       } }/>
+          </IonItem>
 
-              <IonButton style={ { marginTop: '32px', width: '100%' } }
-                         onClick={ () => alert('ToDo: InApp purchases') }>Trinkgeld geben️</IonButton>
-            </IonCardContent>
-          </IonCard>
+          <IonItem>
+            <IonLabel>Trinkgeld geben</IonLabel>
+            <IonToggle slot="end" checked={ props.showTip }
+                       onIonChange={ (e) => store.dispatch(setShowTip(e.detail.checked)) }/>
+          </IonItem>
 
         </IonContent>
       </IonPage>

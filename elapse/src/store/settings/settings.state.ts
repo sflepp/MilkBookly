@@ -3,5 +3,7 @@ import { TimeFrame } from "../../model/TimeFrame.model";
 
 export interface SettingsState {
   preferredCurrency: Currency
-  preferredTimeFrame: TimeFrame
+  preferredTimeFrame: TimeFrame,
+  showTip: boolean
+  showWizard: boolean
 }

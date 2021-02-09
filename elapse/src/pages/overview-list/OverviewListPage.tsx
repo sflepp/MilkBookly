@@ -19,9 +19,9 @@ import { CashFlowEntry } from "../../store/finance/finance.state";
 import { RootState } from "../../store/reducer";
 import { rate } from "../../model/MonetaryAmountRate.model";
 import { add, repeat, returnDownBack } from "ionicons/icons";
-import NewCashFlowEntryModal from "./components/NewCashFlowEntryModal";
-import CashFlowListEntry from "./components/CashFlowListEntry";
 import { TimeFrame } from "../../model/TimeFrame.model";
+import NewContinuousCashFlowEntryModal from "./components/NewContinuousCashFlowEntryModal";
+import CashFlowListEntry from "./components/CashFlowListEntry";
 
 interface Props {
   cashFlow: CashFlowEntry[]
@@ -56,7 +56,7 @@ const OverviewListPage: React.FC<Props> = (props) => {
   const expense = entries.filter(c => c.entry.type === 'expense');
 
   return <IonPage>
-    { showModal === 'continuous' && <NewCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
+    { showModal === 'continuous' && <NewContinuousCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
     <IonHeader>
       <IonToolbar>
         <IonTitle>Finanzdaten</IonTitle>
