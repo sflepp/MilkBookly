@@ -22,12 +22,12 @@ import './theme/variables.css';
 import React from 'react';
 import { Redirect, Route } from "react-router-dom";
 import WizardPage from "./pages/wizard/WizardPage";
-import Tab3 from "./pages/Tab3";
-import OverviewListPage from "./pages/overview-list/OverviewListPage";
 import SettingsPage from "./pages/settings/SettingsPage";
 import { cogOutline, colorWand, pulseOutline, readerOutline } from "ionicons/icons";
 import { RootState } from "./store/reducer";
 import { connect } from "react-redux";
+import ChartsPage from "./pages/charts/ChartsPage";
+import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
 
 interface Props {
   showWizard: boolean
@@ -47,11 +47,11 @@ const App: React.FC<Props> = (props) => {
           <Route exact path="/wizard">
             <WizardPage/>
           </Route>
-          <Route path="/chart">
-            <Tab3/>
+          <Route path="/charts">
+            <ChartsPage/>
           </Route>
-          <Route exact path="/overview-list">
-            <OverviewListPage/>
+          <Route exact path="/financial-data">
+            <FinancialDataPage/>
           </Route>
           <Route exact path="/settings">
             <SettingsPage/>
@@ -64,10 +64,10 @@ const App: React.FC<Props> = (props) => {
           { props.showWizard && <IonTabButton tab="wizard" href="/wizard">
               <IonIcon icon={ colorWand }/>
           </IonTabButton> }
-          <IonTabButton tab="chart" href="/chart">
+          <IonTabButton tab="chart" href="/charts">
             <IonIcon icon={ pulseOutline }/>
           </IonTabButton>
-          <IonTabButton tab="overview-list" href="/overview-list">
+          <IonTabButton tab="overview-list" href="/financial-data">
             <IonIcon icon={ readerOutline }/>
           </IonTabButton>
           <IonTabButton tab="settings" href="/settings">

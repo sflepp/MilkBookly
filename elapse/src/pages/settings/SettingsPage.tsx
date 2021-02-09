@@ -76,7 +76,7 @@ const SettingsPage: React.FC<Props> = (props) => {
           </IonItem>
 
           <IonItem>
-            <IonLabel>Wizard anzeigen</IonLabel>
+            <IonLabel>Wizard</IonLabel>
             <IonToggle slot="end" checked={ props.showWizard }
                        onIonChange={ (e) => {
                          const checked = e.detail.checked
@@ -87,7 +87,7 @@ const SettingsPage: React.FC<Props> = (props) => {
           </IonItem>
 
           <IonItem>
-            <IonLabel>Trinkgeld geben</IonLabel>
+            <IonLabel>Trinkgeld</IonLabel>
             <IonToggle slot="end" checked={ props.showTip }
                        onIonChange={ (e) => store.dispatch(setShowTip(e.detail.checked)) }/>
           </IonItem>

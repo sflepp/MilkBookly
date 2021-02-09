@@ -35,7 +35,7 @@ const mapStateToProps = (state: RootState) => {
   }
 }
 
-const OverviewListPage: React.FC<Props> = (props) => {
+const FinancialDataPage: React.FC<Props> = (props) => {
 
   const [showModal, setShowModal] = useState<'one-time' | 'continuous' | undefined>();
   const [showActionSheet, setShowActionSheet] = useState<boolean>(false);
@@ -53,7 +53,7 @@ const OverviewListPage: React.FC<Props> = (props) => {
       .sort((a, b) => b.rate.amount - a.rate.amount)
 
   const income = entries.filter(c => c.entry.type === 'income');
-  const expense = entries.filter(c => c.entry.type === 'expense');
+  const expense = entries.filter(c => c.entry.type === 'expense')
 
   return <IonPage>
     { showModal === 'continuous' && <NewContinuousCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
@@ -126,4 +126,4 @@ const OverviewListPage: React.FC<Props> = (props) => {
   </IonPage>
 }
 
-export default connect(mapStateToProps)(OverviewListPage);
+export default connect(mapStateToProps)(FinancialDataPage);

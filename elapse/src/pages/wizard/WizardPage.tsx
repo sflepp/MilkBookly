@@ -21,7 +21,7 @@ const mapStateToProps = (state: RootState) => {
 
 const WizardPage: React.FC<Props> = (props) => {
 
-  const hasWage = props.cashFlow.some((c) => c.category === 'wage')
+  const wizard = props.cashFlow.some((c) => c.category === 'wage') ? 'tip' : 'wage';
 
   return (
       <IonPage>
@@ -37,10 +37,8 @@ const WizardPage: React.FC<Props> = (props) => {
               <IonTitle size="large">Wizard</IonTitle>
             </IonToolbar>
           </IonHeader>
-
-          { !hasWage && <WizardWage/> }
-
-          { props.showTip && <Tip/> }
+          { wizard === 'wage' && <WizardWage/> }
+          { wizard === 'tip' && props.showTip && <Tip/> }
         </IonContent>
       </IonPage>
   );
