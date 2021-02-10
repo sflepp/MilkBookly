@@ -1,5 +1,5 @@
-import { Currency, MonetaryAmount } from "./MonetaryAmount.model";
-import { TimeFrame } from "./TimeFrame.model";
+import { Currency, devide, multiply } from "./MonetaryAmount.model";
+import { currentTimeFrameSeconds, TimeFrame } from "./TimeFrame.model";
 import { CashFlowEntry } from "../store/finance/finance.state";
 
 export interface MonetaryAmountRate {
@@ -21,39 +21,16 @@ export const rate = (timeFrame: TimeFrame, cashFlowEntry: CashFlowEntry): Moneta
   }
 }
 
+export const convertRate = (rate: MonetaryAmountRate, to: TimeFrame) => {
+  const rateTimeFrameSeconds = currentTimeFrameSeconds(rate.timeFrame);
+  const toTimeFrameSeconds = currentTimeFrameSeconds(to);
 
-const devide = (value: MonetaryAmount, by: number) => {
+  const monetaryAmountPerSecond = devide(rate, rateTimeFrameSeconds);
+  const monetaryAmountPerTimeframe = multiply(monetaryAmountPerSecond, toTimeFrameSeconds);
+
   return {
-    amount: value.amount / by,
-    currency: value.currency
-  }
-}
-
-const multiply = (value: MonetaryAmount, by: number) => {
-  return {
-    amount: value.amount * by,
-    currency: value.currency
-  }
-}
-
-const currentTimeFrameSeconds = (timeFrame: TimeFrame) => {
-  switch (timeFrame) {
-    case "YEAR":
-      const year = new Date().getFullYear();
-      const daysInYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0) ? 366 : 365;
-      return daysInYear * 3600 * 24;
-    case "MONTH":
-      const now = new Date();
-      return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() * 3600 * 24;
-    case "WEEK":
-      return 3600 * 24 * 7;
-    case "DAY":
-      return 3600 * 24;
-    case "HOUR":
-      return 3600;
-    case "MINUTE":
-      return 60
-    case "SECOND":
-      return 1;
+    amount: monetaryAmountPerTimeframe.amount,
+    currency: rate.currency,
+    timeFrame: to
   }
 }

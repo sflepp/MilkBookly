@@ -19,7 +19,7 @@ const Tip: React.FC = () => {
       <br/><br/>
       Wenn dir diese App gefällt und sie dir etwas bringt, würde sich der Entwickler
       dieser App über ein kleines Trinkgeld freuen, sodass er seine Freundin zu einem
-      Abendessen ausführen kann.
+      Abendessen einladen kann.
 
       <IonButton expand="block"
                  style={ { marginTop: '32px' } }

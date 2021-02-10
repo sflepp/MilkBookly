@@ -1,8 +1,8 @@
-import { IonCard, IonCardContent, IonCol, IonContent, IonHeader, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import './ChartsPage.css';
-import Tip from "../wizard/components/Tip";
 import TotalIncomeRate from "./components/TotalIncomeRate";
+import LiveIncome from "./components/LiveIncome";
 
 const ChartsPage: React.FC = () => {
   return (
@@ -18,12 +18,8 @@ const ChartsPage: React.FC = () => {
               <IonTitle size="large">Übersicht</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <IonCard>
-            <IonCardContent>
-              <TotalIncomeRate/>
-            </IonCardContent>
-          </IonCard>
-
+          <TotalIncomeRate/>
+          <LiveIncome/>
         </IonContent>
       </IonPage>
   );

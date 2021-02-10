@@ -65,12 +65,12 @@ const SettingsPage: React.FC<Props> = (props) => {
           </IonItem>
 
           <IonItem>
-            <IonLabel>Favorisierte Einheit</IonLabel>
+            <IonLabel>Zeitraum</IonLabel>
             <IonSelect value={ props.preferredTimeFrame }
                        interface="action-sheet"
                        onIonChange={ (e) => store.dispatch(setPreferredTimeFrame(e.detail.value)) }>
               { AllTimeFrames.map(c => <IonSelectOption key={ c } value={ c }>
-                { props.preferredCurrency } pro { TimeFrameTranslations2[c] }
+                { TimeFrameTranslations2[c] }
               </IonSelectOption>) }
             </IonSelect>
           </IonItem>

@@ -1,7 +1,9 @@
 import { RootState } from "../reducer";
 import { rate } from "../../model/MonetaryAmountRate.model";
+import { currentTimeFrameElapsedSeconds, currentTimeFrameSeconds } from "../../model/TimeFrame.model";
+import { MonetaryAmount } from "../../model/MonetaryAmount.model";
 
-export const selectTotalRate = (state: RootState) => {
+export const selectCurrentTimeFrameRate = (state: RootState) => {
   return state.finance.cashFlow
       .map(c => {
         return {
@@ -19,3 +21,16 @@ export const selectTotalRate = (state: RootState) => {
         }
       }, { amount: 0.0, currency: state.settings.preferredCurrency, timeFrame: state.settings.preferredTimeFrame })
 }
+
+export const selectIncomeSinceStartOfPreferredTimeFrame = (state: RootState): MonetaryAmount => {
+
+  const rate = selectCurrentTimeFrameRate(state);
+  const elapsedSeconds = currentTimeFrameElapsedSeconds(state.settings.preferredTimeFrame);
+  const totalSeconds = currentTimeFrameSeconds(state.settings.preferredTimeFrame);
+
+  return {
+    amount: rate.amount * (elapsedSeconds / totalSeconds),
+    currency: rate.currency
+  }
+}
+
