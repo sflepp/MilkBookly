@@ -19,13 +19,26 @@ import store from "../../../store";
 import { addCashFlowEntry } from "../../../store/finance/finance.actions";
 import { TimeFrame } from "../../../model/TimeFrame.model";
 import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
+import { CustomDate } from "../../../model/CustomDate";
+import { RootState } from "../../../store/reducer";
+import { connect } from "react-redux";
+
+interface Props {
+  currentTime: CustomDate
+}
 
 interface FormData {
-  period: TimeFrame,
+  period: TimeFrame
   amount: MonetaryAmount
 }
 
-const WizardWage: React.FC = () => {
+const mapStateToProps = (state: RootState): Props => {
+  return {
+    currentTime: state.environment.currentTime
+  }
+}
+
+const WizardWage: React.FC<Props> = (props) => {
   const { handleSubmit, control } = useForm<FormData>({
     defaultValues: {
       amount: {
@@ -42,14 +55,11 @@ const WizardWage: React.FC = () => {
       type: 'income',
       category: 'wage',
       amount: data.amount,
+      start: props.currentTime,
       recurrence: {
         type: 'continuous',
         repetition: data.period
       },
-      retention: {
-        timeFrame: data.period,
-        fn: 'linear'
-      }
     }))
   }
 
@@ -87,4 +97,4 @@ const WizardWage: React.FC = () => {
   </IonCard>)
 };
 
-export default WizardWage;
+export default connect(mapStateToProps)(WizardWage);

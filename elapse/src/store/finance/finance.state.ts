@@ -2,6 +2,7 @@ import { MonetaryAmount } from "../../model/MonetaryAmount.model";
 import { TimeFrame } from "../../model/TimeFrame.model";
 import { CashFlowEntryType } from "../../model/CashFlowEntryType.model";
 import { CashFlowEntryCategory } from "../../model/CashFlowEntryCategory.model";
+import { CustomDate } from "../../model/CustomDate";
 
 export interface FinanceState {
   cashFlow: CashFlowEntry[]
@@ -10,24 +11,24 @@ export interface FinanceState {
 export interface CashFlowEntry {
   id?: UUID
   description: string
+  start: CustomDate
+  end?: CustomDate
   category: CashFlowEntryCategory
   type: CashFlowEntryType
-  amount: MonetaryAmount,
+  amount: MonetaryAmount
   recurrence: Recurrence
-  retention: Retention
 }
 
 export type UUID = string
-
-export interface Retention {
-  timeFrame: TimeFrame
-  fn: 'linear'
-}
 
 export type Recurrence = OneTimeRecurrence | ContinuousRecurrence;
 
 export interface OneTimeRecurrence {
   type: 'one-time'
+  amortization: {
+    timeFrame: TimeFrame,
+    amount: number
+  }
 }
 
 export interface ContinuousRecurrence {

@@ -1,10 +1,10 @@
-import { start } from "repl";
+import { CustomDate } from "./CustomDate";
 
 export type TimeFrame = 'YEAR' | 'MONTH' | 'WEEK' | 'DAY' | 'HOUR' | 'MINUTE' | 'SECOND'
 
 export const AllTimeFrames: TimeFrame[] = ['YEAR', 'MONTH', 'WEEK', 'DAY', 'HOUR', 'MINUTE', 'SECOND']
 
-export const TimeFrameTranslations: {[key: string]: string} = {
+export const TimeFrameTranslationsAdjective: { [key: string]: string } = {
   'YEAR': 'Jährlich',
   'MONTH': 'Monatlich',
   'WEEK': 'Wöchentlich',
@@ -14,7 +14,7 @@ export const TimeFrameTranslations: {[key: string]: string} = {
   'SECOND': 'Sekündlich'
 }
 
-export const TimeFrameAbbrevations: {[key: string]: string} = {
+export const TimeFrameAbbrevations: { [key: string]: string } = {
   'YEAR': 'Y',
   'MONTH': 'M',
   'WEEK': 'W',
@@ -24,7 +24,7 @@ export const TimeFrameAbbrevations: {[key: string]: string} = {
   'SECOND': 's'
 }
 
-export const TimeFrameTranslations2: {[key: string]: string} = {
+export const TimeFrameTranslationsNoun: { [key: string]: string } = {
   'YEAR': 'Jahr',
   'MONTH': 'Monat',
   'WEEK': 'Woche',
@@ -34,7 +34,17 @@ export const TimeFrameTranslations2: {[key: string]: string} = {
   'SECOND': 'Sekunde'
 }
 
-export const StartOfTimeFrameTranslations: {[key: string]: string} = {
+export const TimeFrameTranslationsNounPlural: { [key: string]: string } = {
+  'YEAR': 'Jahre',
+  'MONTH': 'Monate',
+  'WEEK': 'Wochen',
+  'DAY': 'Tage',
+  'HOUR': 'Stunden',
+  'MINUTE': 'Minuten',
+  'SECOND': 'Sekunden'
+}
+
+export const StartOfTimeFrameTranslations: { [key: string]: string } = {
   'YEAR': 'Dieses Jahr',
   'MONTH': 'Diesen Monat',
   'WEEK': 'Diese Woche',
@@ -44,15 +54,15 @@ export const StartOfTimeFrameTranslations: {[key: string]: string} = {
   'SECOND': 'Jetzt'
 }
 
-export const currentTimeFrameSeconds = (timeFrame: TimeFrame) => {
+export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: CustomDate): number => {
+  const referenceDate = new Date(reference);
   switch (timeFrame) {
     case "YEAR":
-      const year = new Date().getFullYear();
+      const year = referenceDate.getFullYear();
       const daysInYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0) ? 366 : 365;
       return daysInYear * 3600 * 24;
     case "MONTH":
-      const now = new Date();
-      return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() * 3600 * 24;
+      return new Date(referenceDate.getFullYear(), referenceDate.getMonth() + 1, 0).getDate() * 3600 * 24;
     case "WEEK":
       return 3600 * 24 * 7;
     case "DAY":
@@ -66,33 +76,33 @@ export const currentTimeFrameSeconds = (timeFrame: TimeFrame) => {
   }
 }
 
-export const currentTimeFrameElapsedSeconds = (timeFrame: TimeFrame) => {
-  const now = new Date();
+export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeFrame) => {
+  const nowDate = new Date(now);
   let startOfTimeFrame: Date;
   switch (timeFrame) {
     case "YEAR":
-      startOfTimeFrame = new Date(now.getFullYear(), 0, 1);
+      startOfTimeFrame = new Date(nowDate.getFullYear(), 0, 1);
       break;
     case "MONTH":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), 1);
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1);
       break;
     case "WEEK":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate())
       startOfTimeFrame.setDate(startOfTimeFrame.getDate() - startOfTimeFrame.getDay() + 1);
       break;
     case "DAY":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
       break;
     case "HOUR":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours());
       break;
     case "MINUTE":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours(), nowDate.getMinutes())
       break;
     case "SECOND":
-      startOfTimeFrame = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
+      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours(), nowDate.getMinutes(), nowDate.getSeconds())
       break;
   }
 
-  return (now.getTime() - startOfTimeFrame.getTime()) / 1000;
+  return (nowDate.getTime() - startOfTimeFrame.getTime()) / 1000;
 }

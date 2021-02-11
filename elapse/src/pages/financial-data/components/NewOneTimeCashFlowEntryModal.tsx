@@ -18,7 +18,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/react';
-import { checkmark, close, pin } from "ionicons/icons";
+import { close } from "ionicons/icons";
 import { Controller, useForm } from "react-hook-form";
 import MonetaryInput from "../../../components/MonetaryInput";
 import TimeFrameInput from "../../../components/TimeFrameInput";
@@ -28,24 +28,27 @@ import { TimeFrame } from "../../../model/TimeFrame.model";
 import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
 import CashFlowEntryTypeInput from "../../../components/CashFlowEntryTypeInput";
 import { CashFlowEntryType } from "../../../model/CashFlowEntryType.model";
-import { CustomDate } from "../../../model/CustomDate";
+import { addNTimeFrames, CustomDate } from "../../../model/CustomDate";
 
 interface Props {
-  currentTime: CustomDate,
+  currentTime: CustomDate
   onClose: () => void
 }
 
 interface FormData {
   description: string
   type: CashFlowEntryType
-  period: TimeFrame
+  amortizationTimeFrame: TimeFrame
+  amortizationAmount: number
   amount: MonetaryAmount
 }
 
-const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
+const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
 
-  const [ title, setTitle ] = useState<string>();
+  const [title, setTitle] = useState<string>();
+  const [plural, setPlural] = useState<boolean>();
   const { handleSubmit, control } = useForm<FormData>({
+    mode: "onChange",
     defaultValues: {
       description: '',
       type: 'expense',
@@ -53,20 +56,25 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
         amount: 0,
         currency: 'CHF'
       },
-      period: 'MONTH',
+      amortizationTimeFrame: 'MONTH',
+      amortizationAmount: 1
     }
   });
 
   const onSubmit = (data: FormData) => {
     store.dispatch(addCashFlowEntry({
       description: data.description,
-      start: props.currentTime,
       type: data.type,
       category: 'wage',
       amount: data.amount,
+      start: props.currentTime,
+      end: addNTimeFrames(props.currentTime, data.amortizationTimeFrame, data.amortizationAmount),
       recurrence: {
-        type: 'continuous',
-        repetition: data.period
+        type: 'one-time',
+        amortization: {
+          timeFrame: data.amortizationTimeFrame,
+          amount: data.amortizationAmount
+        }
       },
     }))
 
@@ -90,8 +98,8 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
             <IonContent>
               <IonCard>
                 <IonCardHeader>
-                  <IonCardSubtitle>Wiederholend</IonCardSubtitle>
-                  <IonCardTitle>{title || 'Beschreibung'}</IonCardTitle>
+                  <IonCardSubtitle>Einmalig</IonCardSubtitle>
+                  <IonCardTitle>{ title || 'Beschreibung' }</IonCardTitle>
                 </IonCardHeader>
 
                 <IonCardContent>
@@ -127,16 +135,32 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
                             <MonetaryInput value={ value } onChange={ onChange }/>
                         }
                     />
-                    <Controller
-                        name="period"
-                        control={ control }
-                        render={ ({ onChange, value }) =>
-                            <IonItem>
-                              <IonLabel>Wiederholung</IonLabel>
-                              <TimeFrameInput translation="adjective" value={ value } onChange={ onChange }/>
-                            </IonItem>
-                        }
-                    />
+                    <IonItem>
+                      <IonLabel>Amortisation</IonLabel>
+                      <Controller
+                          name="amortizationAmount"
+                          control={ control }
+                          render={ ({ onChange, value }) =>
+                              <IonInput type="number" style={ { textAlign: 'right' } } value={ value }
+                                        onIonChange={ (e) => {
+                                          const value = parseInt(e.detail.value!);
+
+                                          if (!isNaN(value)) {
+                                            setPlural(value !== 1)
+                                            onChange(value)
+                                          }
+                                        } }/>
+                          }
+                      />
+                      <Controller
+                          name="amortizationTimeFrame"
+                          control={ control }
+                          render={ ({ onChange, value }) =>
+                              <TimeFrameInput translation={ plural ? 'noun-plural' : 'noun' }
+                                              value={ value } onChange={ onChange }/>
+                          }
+                      />
+                    </IonItem>
 
                     <IonButton type="submit" className="ok-button">
                       Hinzufügen
@@ -151,4 +175,4 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
   );
 };
 
-export default NewContinuousCashFlowEntryModal
+export default NewOneTimeCashFlowEntryModal

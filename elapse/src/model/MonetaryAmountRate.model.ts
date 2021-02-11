@@ -1,6 +1,7 @@
 import { Currency, devide, multiply } from "./MonetaryAmount.model";
-import { currentTimeFrameSeconds, TimeFrame } from "./TimeFrame.model";
+import { calculateTimeFrameSeconds, TimeFrame } from "./TimeFrame.model";
 import { CashFlowEntry } from "../store/finance/finance.state";
+import { CustomDate } from "./CustomDate";
 
 export interface MonetaryAmountRate {
   amount: number,
@@ -8,10 +9,19 @@ export interface MonetaryAmountRate {
   timeFrame: TimeFrame
 }
 
-export const rate = (timeFrame: TimeFrame, cashFlowEntry: CashFlowEntry): MonetaryAmountRate => {
-  const cashFlowTimeFrameSeconds = currentTimeFrameSeconds(cashFlowEntry.retention.timeFrame);
-  const monetaryAmountPerSecond = devide(cashFlowEntry.amount, cashFlowTimeFrameSeconds)
-  const timeFrameSeconds = currentTimeFrameSeconds(timeFrame);
+export const rate = (time: CustomDate, timeFrame: TimeFrame, entry: CashFlowEntry): MonetaryAmountRate => {
+  let entryTimeFrameSeconds: number;
+
+  if (entry.recurrence.type === 'continuous') {
+    entryTimeFrameSeconds = calculateTimeFrameSeconds(entry.recurrence.repetition, time)
+  } else if (entry.recurrence.type === 'one-time') {
+    entryTimeFrameSeconds = calculateTimeFrameSeconds(entry.recurrence.amortization.timeFrame, time) * entry.recurrence.amortization.amount
+  } else {
+    throw new Error(`Unknown recurrence type for entry ${ JSON.stringify(entry) }`)
+  }
+
+  const monetaryAmountPerSecond = devide(entry.amount, entryTimeFrameSeconds)
+  const timeFrameSeconds = calculateTimeFrameSeconds(timeFrame, time);
   const monetaryAmountPerTimeframe = multiply(monetaryAmountPerSecond, timeFrameSeconds)
 
   return {
@@ -21,9 +31,9 @@ export const rate = (timeFrame: TimeFrame, cashFlowEntry: CashFlowEntry): Moneta
   }
 }
 
-export const convertRate = (rate: MonetaryAmountRate, to: TimeFrame) => {
-  const rateTimeFrameSeconds = currentTimeFrameSeconds(rate.timeFrame);
-  const toTimeFrameSeconds = currentTimeFrameSeconds(to);
+export const convertRate = (time: CustomDate, rate: MonetaryAmountRate, to: TimeFrame) => {
+  const rateTimeFrameSeconds = calculateTimeFrameSeconds(rate.timeFrame, time);
+  const toTimeFrameSeconds = calculateTimeFrameSeconds(to, time);
 
   const monetaryAmountPerSecond = devide(rate, rateTimeFrameSeconds);
   const monetaryAmountPerTimeframe = multiply(monetaryAmountPerSecond, toTimeFrameSeconds);

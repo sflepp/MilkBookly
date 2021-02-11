@@ -19,7 +19,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route } from "react-router-dom";
 import WizardPage from "./pages/wizard/WizardPage";
 import SettingsPage from "./pages/settings/SettingsPage";
@@ -28,18 +28,33 @@ import { RootState } from "./store/reducer";
 import { connect } from "react-redux";
 import ChartsPage from "./pages/charts/ChartsPage";
 import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
+import store from "./store";
+import { tickTime } from "./store/enviornment/enviornment.actions";
+import { CustomDate } from "./model/CustomDate";
 
 interface Props {
-  showWizard: boolean
+  showWizard: boolean,
+  currentTime: CustomDate
 }
 
 const mapStateToProps = (state: RootState): Props => {
   return {
-    showWizard: state.settings.showWizard
+    showWizard: state.settings.showWizard,
+    currentTime: state.environment.currentTime
   }
 }
 
 const App: React.FC<Props> = (props) => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      store.dispatch(tickTime())
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    }
+  }, [])
+
   return (<IonApp>
     <IonReactRouter>
       <IonTabs>

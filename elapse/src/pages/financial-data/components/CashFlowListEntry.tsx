@@ -7,10 +7,12 @@ import { MonetaryAmountRate } from "../../../model/MonetaryAmountRate.model";
 import { TimeFrame } from "../../../model/TimeFrame.model";
 import store from "../../../store";
 import { removeCashFlowEntry } from "../../../store/finance/finance.actions";
+import { CustomDate } from "../../../model/CustomDate";
 
 interface Props {
-  entry: CashFlowEntry,
-  rate: MonetaryAmountRate,
+  time: CustomDate
+  entry: CashFlowEntry
+  rate: MonetaryAmountRate
   timeFrame: TimeFrame
   others: CashFlowEntry[]
 }
@@ -29,9 +31,19 @@ const CashFlowListEntry: React.FC<Props> = (props) => {
           </IonItemOption>
         </IonItemOptions>
         <IonItem>
-          <IonLabel>{ props.entry.description }</IonLabel>
-          <IonLabel slot="end" style={ { textAlign: 'right' } }>
-            <IncomeRate others={ props.others } cashFlow={ props.entry } timeFrame={ props.timeFrame }/>
+          <IonLabel style={ { width: '70%' } }>
+            <b>{ props.entry.description }</b><br/>
+            <span style={ {
+              color: 'grey',
+              fontSize: '0.85em'
+            } }>{ props.entry.recurrence.type === 'continuous' ? 'Wiederkehrend' : 'Einmalig' }</span>
+            { props.entry.end && <span style={ {
+              color: 'grey',
+              fontSize: '0.85em'
+            } }>, bis { new Date(props.entry.end).toLocaleDateString('de-CH') }</span> }
+          </IonLabel>
+          <IonLabel slot="end" style={ { textAlign: 'right', flex: '0 0 110px' } }>
+            <IncomeRate time={props.time} others={ props.others } cashFlow={ props.entry } timeFrame={ props.timeFrame }/>
           </IonLabel>
         </IonItem>
       </IonItemSliding>

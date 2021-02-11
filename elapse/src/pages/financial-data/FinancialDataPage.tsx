@@ -22,16 +22,20 @@ import { add, repeat, returnDownBack } from "ionicons/icons";
 import { TimeFrame } from "../../model/TimeFrame.model";
 import NewContinuousCashFlowEntryModal from "./components/NewContinuousCashFlowEntryModal";
 import CashFlowListEntry from "./components/CashFlowListEntry";
+import NewOneTimeCashFlowEntryModal from "./components/NewOneTimeCashFlowEntryModal";
+import { CustomDate } from "../../model/CustomDate";
 
 interface Props {
   cashFlow: CashFlowEntry[]
   preferredTimeFrame: TimeFrame
+  currentTime: CustomDate
 }
 
 const mapStateToProps = (state: RootState) => {
   return {
     cashFlow: state.finance.cashFlow,
-    preferredTimeFrame: state.settings.preferredTimeFrame
+    preferredTimeFrame: state.settings.preferredTimeFrame,
+    currentTime: state.environment.currentTime
   }
 }
 
@@ -44,9 +48,11 @@ const FinancialDataPage: React.FC<Props> = (props) => {
   const filtered = searchText !== '' ? props.cashFlow.filter(e => e.description.includes(searchText)) : props.cashFlow;
 
   const entries = filtered
+      .filter(c => new Date(props.currentTime) > new Date(c.start))
+      .filter(c => c.end === undefined || new Date(props.currentTime).getTime() < new Date(c.end).getTime())
       .map((c) => {
         return {
-          rate: rate(props.preferredTimeFrame, c),
+          rate: rate(props.currentTime, props.preferredTimeFrame, c),
           entry: c
         }
       })
@@ -56,7 +62,10 @@ const FinancialDataPage: React.FC<Props> = (props) => {
   const expense = entries.filter(c => c.entry.type === 'expense')
 
   return <IonPage>
-    { showModal === 'continuous' && <NewContinuousCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
+    { showModal === 'continuous' &&
+    <NewContinuousCashFlowEntryModal currentTime={ props.currentTime } onClose={ () => setShowModal(undefined) }/> }
+    { showModal === 'one-time' &&
+    <NewOneTimeCashFlowEntryModal currentTime={ props.currentTime } onClose={ () => setShowModal(undefined) }/> }
     <IonHeader>
       <IonToolbar>
         <IonTitle>Finanzdaten</IonTitle>
@@ -83,7 +92,11 @@ const FinancialDataPage: React.FC<Props> = (props) => {
           <IonLabel>Einnahmen</IonLabel>
         </IonListHeader>
         { income.map((e) =>
-            <CashFlowListEntry key={ e.entry.id } others={ filtered } timeFrame={ props.preferredTimeFrame } entry={ e.entry }
+            <CashFlowListEntry key={ e.entry.id }
+                               time={ props.currentTime }
+                               others={ filtered }
+                               timeFrame={ props.preferredTimeFrame }
+                               entry={ e.entry }
                                rate={ e.rate }/>)
         }
       </IonList>) }
@@ -92,7 +105,11 @@ const FinancialDataPage: React.FC<Props> = (props) => {
           <IonLabel>Ausgaben</IonLabel>
         </IonListHeader>
         { expense.map((e) =>
-            <CashFlowListEntry key={ e.entry.id } others={ filtered } timeFrame={ props.preferredTimeFrame } entry={ e.entry }
+            <CashFlowListEntry key={ e.entry.id }
+                               time={ props.currentTime }
+                               others={ filtered }
+                               timeFrame={ props.preferredTimeFrame }
+                               entry={ e.entry }
                                rate={ e.rate }/>)
         }
       </IonList>) }
@@ -102,7 +119,7 @@ const FinancialDataPage: React.FC<Props> = (props) => {
           isOpen={ showActionSheet }
           onDidDismiss={ () => setShowActionSheet(false) }
           buttons={ [{
-            text: 'Wiederholend',
+            text: 'Wiederkehrend',
             icon: repeat,
             handler: () => {
               setShowModal('continuous');

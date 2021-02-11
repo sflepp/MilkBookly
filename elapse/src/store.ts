@@ -10,7 +10,7 @@ const createStoreWithMiddleware
 
 const store = createStoreWithMiddleware(
     rootReducer,
-    load() // Loading done here
+    load() // Loading done here,
 )
 
 if (process.env.NODE_ENV === "development" && module.hot) {

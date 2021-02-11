@@ -1,11 +1,13 @@
 import {
   IonContent,
+  IonDatetime,
   IonHeader,
   IonItem,
   IonLabel,
   IonPage,
   IonSelect,
   IonSelectOption,
+  IonText,
   IonTitle,
   IonToggle,
   IonToolbar
@@ -22,13 +24,18 @@ import {
   setShowTip,
   setShowWizard
 } from "../../store/settings/settings.actions";
-import { AllTimeFrames, TimeFrame, TimeFrameTranslations2 } from "../../model/TimeFrame.model";
+import { TimeFrame } from "../../model/TimeFrame.model";
+import TimeFrameInput from "../../components/TimeFrameInput";
+import { CustomDate } from "../../model/CustomDate";
+import { setCurrentTime, setUseFakeTime } from "../../store/enviornment/enviornment.actions";
 
 interface Props {
   showWizard: boolean,
   showTip: boolean,
   preferredCurrency: Currency,
-  preferredTimeFrame: TimeFrame
+  preferredTimeFrame: TimeFrame,
+  currentTime: CustomDate,
+  useFakeTime: boolean
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -36,11 +43,17 @@ const mapStateToProps = (state: RootState) => {
     showWizard: state.settings.showWizard,
     showTip: state.settings.showTip,
     preferredCurrency: state.settings.preferredCurrency,
-    preferredTimeFrame: state.settings.preferredTimeFrame
+    preferredTimeFrame: state.settings.preferredTimeFrame,
+    currentTime: state.environment.currentTime,
+    useFakeTime: state.environment.useFakeTime
   }
 }
 
 const SettingsPage: React.FC<Props> = (props) => {
+
+  const [timeCache, setTimeCache] = useState<CustomDate>(props.currentTime)
+  const [useFakeTimeCache, setUseFakeTimeCache] = useState<boolean>(props.useFakeTime)
+
   return (
       <IonPage>
         <IonHeader>
@@ -66,13 +79,9 @@ const SettingsPage: React.FC<Props> = (props) => {
 
           <IonItem>
             <IonLabel>Zeitraum</IonLabel>
-            <IonSelect value={ props.preferredTimeFrame }
-                       interface="action-sheet"
-                       onIonChange={ (e) => store.dispatch(setPreferredTimeFrame(e.detail.value)) }>
-              { AllTimeFrames.map(c => <IonSelectOption key={ c } value={ c }>
-                { TimeFrameTranslations2[c] }
-              </IonSelectOption>) }
-            </IonSelect>
+
+            <TimeFrameInput translation="noun" value={ props.preferredTimeFrame }
+                            onChange={ (e) => store.dispatch(setPreferredTimeFrame(e)) }/>
           </IonItem>
 
           <IonItem>
@@ -92,6 +101,27 @@ const SettingsPage: React.FC<Props> = (props) => {
                        onIonChange={ (e) => store.dispatch(setShowTip(e.detail.checked)) }/>
           </IonItem>
 
+          <br />
+
+          <IonItem>
+            <IonLabel><IonText><h1>Development Settings</h1></IonText></IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Fake time</IonLabel>
+            <IonToggle slot="end" checked={ useFakeTimeCache }
+                       onIonChange={ (e) => {
+                         setUseFakeTimeCache(e.detail.checked)
+                         store.dispatch(setUseFakeTime(e.detail.checked))
+                       } }/>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Aktuelles Datum (dev)</IonLabel>
+            <IonDatetime displayFormat="DD.MM.YYYY" max="2030" placeholder="Select Date" value={ timeCache }
+                         onIonChange={ e => {
+                           setTimeCache(e.detail.value!);
+                           store.dispatch(setCurrentTime(e.detail.value!))
+                         } }/>
+          </IonItem>
         </IonContent>
       </IonPage>
   );
