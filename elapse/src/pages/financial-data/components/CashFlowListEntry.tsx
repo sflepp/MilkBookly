@@ -36,11 +36,11 @@ const CashFlowListEntry: React.FC<Props> = (props) => {
             <span style={ {
               color: 'grey',
               fontSize: '0.85em'
-            } }>{ props.entry.recurrence.type === 'continuous' ? 'Wiederkehrend' : 'Einmalig' }</span>
+            } }>{ props.entry.recurrence.type === 'continuous' ? 'Wiederkehrend' : '' }</span>
             { props.entry.end && <span style={ {
               color: 'grey',
               fontSize: '0.85em'
-            } }>, bis { new Date(props.entry.end).toLocaleDateString('de-CH') }</span> }
+            } }>Amortisiert am { new Date(props.entry.end).toLocaleDateString('de-CH') }</span> }
           </IonLabel>
           <IonLabel slot="end" style={ { textAlign: 'right', flex: '0 0 110px' } }>
             <IncomeRate time={props.time} others={ props.others } cashFlow={ props.entry } timeFrame={ props.timeFrame }/>

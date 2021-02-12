@@ -45,11 +45,12 @@ const FinancialDataPage: React.FC<Props> = (props) => {
   const [showActionSheet, setShowActionSheet] = useState<boolean>(false);
   const [searchText, setSearchText] = useState('');
 
-  const filtered = searchText !== '' ? props.cashFlow.filter(e => e.description.includes(searchText)) : props.cashFlow;
-
-  const entries = filtered
+  const filtered = props.cashFlow
+      .filter(e => searchText === '' || e.description.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
       .filter(c => new Date(props.currentTime) > new Date(c.start))
       .filter(c => c.end === undefined || new Date(props.currentTime).getTime() < new Date(c.end).getTime())
+
+  const entries = filtered
       .map((c) => {
         return {
           rate: rate(props.currentTime, props.preferredTimeFrame, c),

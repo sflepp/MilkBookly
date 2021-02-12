@@ -14,7 +14,6 @@ import {
   IonItem,
   IonLabel,
   IonModal,
-  IonPage,
   IonTitle,
   IonToolbar
 } from '@ionic/react';
@@ -84,92 +83,90 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
   return (
       <>
         <IonModal isOpen={ true } cssClass='my-custom-class'>
-          <IonPage>
-            <IonHeader>
-              <IonToolbar>
-                <IonTitle>Neuer Eintrag</IonTitle>
-                <IonButtons slot="end">
-                  <IonButton onClick={ props.onClose }>
-                    <IonIcon icon={ close }/>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Neuer Eintrag</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={ props.onClose }>
+                  <IonIcon icon={ close }/>
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonCard>
+              <IonCardHeader>
+                <IonCardSubtitle>Einmalig</IonCardSubtitle>
+                <IonCardTitle>{ title || 'Beschreibung' }</IonCardTitle>
+              </IonCardHeader>
+
+              <IonCardContent>
+                <form onSubmit={ handleSubmit(onSubmit) }>
+                  <Controller
+                      name="description"
+                      control={ control }
+                      render={ ({ onChange, value }) =>
+                          <IonItem>
+                            <IonLabel>Beschreibung</IonLabel>
+                            <IonInput style={ { textAlign: 'right' } } value={ value }
+                                      onIonChange={ (e) => {
+                                        setTitle(e.detail.value!)
+                                        onChange(e.detail.value!)
+                                      } }/>
+                          </IonItem>
+                      }
+                  />
+                  <Controller
+                      name="type"
+                      control={ control }
+                      render={ ({ onChange, value }) =>
+                          <IonItem>
+                            <IonLabel>Typ</IonLabel>
+                            <CashFlowEntryTypeInput value={ value } onChange={ onChange }/>
+                          </IonItem>
+                      }
+                  />
+                  <Controller
+                      name="amount"
+                      control={ control }
+                      render={ ({ onChange, value }) =>
+                          <MonetaryInput value={ value } onChange={ onChange }/>
+                      }
+                  />
+                  <IonItem>
+                    <IonLabel>Amortisation</IonLabel>
+                    <Controller
+                        name="amortizationAmount"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <IonInput type="number" style={ { textAlign: 'right' } } value={ value }
+                                      onIonChange={ (e) => {
+                                        const value = parseInt(e.detail.value!);
+
+                                        if (!isNaN(value)) {
+                                          setPlural(value !== 1)
+                                          onChange(value)
+                                        }
+                                      } }/>
+                        }
+                    />
+                    <Controller
+                        name="amortizationTimeFrame"
+                        control={ control }
+                        render={ ({ onChange, value }) =>
+                            <TimeFrameInput translation={ plural ? 'noun-plural' : 'noun' }
+                                            value={ value } onChange={ onChange }/>
+                        }
+                    />
+                  </IonItem>
+
+                  <IonButton type="submit" className="ok-button">
+                    Hinzufügen
                   </IonButton>
-                </IonButtons>
-              </IonToolbar>
-            </IonHeader>
-            <IonContent>
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardSubtitle>Einmalig</IonCardSubtitle>
-                  <IonCardTitle>{ title || 'Beschreibung' }</IonCardTitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  <form onSubmit={ handleSubmit(onSubmit) }>
-                    <Controller
-                        name="description"
-                        control={ control }
-                        render={ ({ onChange, value }) =>
-                            <IonItem>
-                              <IonLabel>Beschreibung</IonLabel>
-                              <IonInput style={ { textAlign: 'right' } } value={ value }
-                                        onIonChange={ (e) => {
-                                          setTitle(e.detail.value!)
-                                          onChange(e.detail.value!)
-                                        } }/>
-                            </IonItem>
-                        }
-                    />
-                    <Controller
-                        name="type"
-                        control={ control }
-                        render={ ({ onChange, value }) =>
-                            <IonItem>
-                              <IonLabel>Typ</IonLabel>
-                              <CashFlowEntryTypeInput value={ value } onChange={ onChange }/>
-                            </IonItem>
-                        }
-                    />
-                    <Controller
-                        name="amount"
-                        control={ control }
-                        render={ ({ onChange, value }) =>
-                            <MonetaryInput value={ value } onChange={ onChange }/>
-                        }
-                    />
-                    <IonItem>
-                      <IonLabel>Amortisation</IonLabel>
-                      <Controller
-                          name="amortizationAmount"
-                          control={ control }
-                          render={ ({ onChange, value }) =>
-                              <IonInput type="number" style={ { textAlign: 'right' } } value={ value }
-                                        onIonChange={ (e) => {
-                                          const value = parseInt(e.detail.value!);
-
-                                          if (!isNaN(value)) {
-                                            setPlural(value !== 1)
-                                            onChange(value)
-                                          }
-                                        } }/>
-                          }
-                      />
-                      <Controller
-                          name="amortizationTimeFrame"
-                          control={ control }
-                          render={ ({ onChange, value }) =>
-                              <TimeFrameInput translation={ plural ? 'noun-plural' : 'noun' }
-                                              value={ value } onChange={ onChange }/>
-                          }
-                      />
-                    </IonItem>
-
-                    <IonButton type="submit" className="ok-button">
-                      Hinzufügen
-                    </IonButton>
-                  </form>
-                </IonCardContent>
-              </IonCard>
-            </IonContent>
-          </IonPage>
+                </form>
+              </IonCardContent>
+            </IonCard>
+          </IonContent>
         </IonModal>
       </>
   );
