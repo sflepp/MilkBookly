@@ -1,8 +1,10 @@
 import { IonInput, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import React from 'react';
+import React, { useState } from 'react';
 import './MonetaryInput.css';
-import { AllCurrencies, MonetaryAmount } from "../model/MonetaryAmount.model";
+import { AllCurrencies, Currency, MonetaryAmount } from "../model/MonetaryAmount.model";
 import { InputChangeEventDetail, SelectChangeEventDetail } from "@ionic/core";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
 
 interface Props {
   defaultValue?: MonetaryAmount
@@ -12,53 +14,38 @@ interface Props {
 
 const MonetaryInput: React.FC<Props> = (props) => {
 
-  const defaultValue = props.defaultValue || {
-    amount: 0,
-    currency: 'CHF'
-  }
+  const [amount, setAmount] = useState<string>(props.value.amount === 0 ? '' : props.value.amount + '')
 
+  const currency = useSelector<RootState, Currency>(state => state.settings.preferredCurrency)
   const onAmountChange = (e: CustomEvent<InputChangeEventDetail>) => {
+
+    setAmount(e.detail.value!)
     const number = parseFloat(e.detail.value!);
+
     if (!isNaN(number)) {
       props.onChange({
-        ...props.value,
+        currency: currency,
         amount: number
       })
     } else {
       props.onChange({
-        ...props.value,
+        currency: currency,
         amount: 0
       })
     }
-  }
-
-  const onCurrencyChange = (e: CustomEvent<SelectChangeEventDetail>) => {
-    props.onChange({
-      ...props.value,
-      currency: e.detail.value!
-    })
   }
 
   return (
       <>
         <IonItem>
           <IonLabel>Betrag</IonLabel>
-          <IonInput value={ props.value.amount === 0 ? '' : props.value.amount }
-                    type='text'
+          <IonInput value={ amount }
+                    type='number'
+                    step="0.01"
                     inputMode="decimal"
                     style={ { textAlign: 'right' } }
                     onIonChange={ onAmountChange }/>
-        </IonItem>
-        <IonItem>
-          <IonLabel>Währung</IonLabel>
-          <IonSelect value={ props.value.currency || defaultValue.currency }
-                     interface="action-sheet"
-                     style={ { paddingLeft: 0 } }
-                     onIonChange={ onCurrencyChange }>
-            { AllCurrencies.map(c =>
-                <IonSelectOption key={ c } value={ c }>{ c }</IonSelectOption>
-            ) }
-          </IonSelect>
+          <span className="currency">CHF</span>
         </IonItem>
       </>
   );
