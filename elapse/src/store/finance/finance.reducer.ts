@@ -1,9 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { addCashFlowEntry, removeCashFlowEntry } from "./finance.actions";
+import { addCapitalEntry, addCashFlowEntry, removeCashFlowEntry } from "./finance.actions";
 import { FinanceState, UUID } from "./finance.state";
 
 const initialFinanceState: FinanceState = {
-  cashFlow: []
+  cashFlow: [],
+  capital: []
 }
 
 export const FinanceReducer = createReducer(initialFinanceState, (builder) => {
@@ -24,6 +25,18 @@ export const FinanceReducer = createReducer(initialFinanceState, (builder) => {
     return {
       ...state,
       cashFlow: state.cashFlow.filter(e => e.id !== action.payload)
+    }
+  })
+
+  builder.addCase(addCapitalEntry, (state, action) => {
+    const capitalEntry = {
+      ...action.payload,
+      id: uuid()
+    }
+
+    return {
+      ...state,
+      capital: [...state.capital, capitalEntry]
     }
   })
 })

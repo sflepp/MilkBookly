@@ -15,7 +15,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/react';
-import { CashFlowEntry } from "../../store/finance/finance.state";
+import { CapitalEntry, CashFlowEntry, filterActive } from "../../store/finance/finance.state";
 import { RootState } from "../../store/reducer";
 import { rate } from "../../model/MonetaryAmountRate.model";
 import { add, repeat, returnDownBack } from "ionicons/icons";
@@ -23,10 +23,11 @@ import { TimeFrame } from "../../model/TimeFrame.model";
 import NewContinuousCashFlowEntryModal from "./components/NewContinuousCashFlowEntryModal";
 import CashFlowListEntry from "./components/CashFlowListEntry";
 import NewOneTimeCashFlowEntryModal from "./components/NewOneTimeCashFlowEntryModal";
-import { CustomDate } from "../../model/CustomDate";
+import { CustomDate, isAfter } from "../../model/CustomDate";
 
 interface Props {
   cashFlow: CashFlowEntry[]
+  capital: CapitalEntry[]
   preferredTimeFrame: TimeFrame
   currentTime: CustomDate
 }
@@ -34,21 +35,20 @@ interface Props {
 const mapStateToProps = (state: RootState) => {
   return {
     cashFlow: state.finance.cashFlow,
+    capital: state.finance.capital,
     preferredTimeFrame: state.settings.preferredTimeFrame,
     currentTime: state.environment.currentTime
   }
 }
 
 const FinancialDataPage: React.FC<Props> = (props) => {
-
   const [showModal, setShowModal] = useState<'one-time' | 'continuous' | undefined>();
   const [showActionSheet, setShowActionSheet] = useState<boolean>(false);
   const [searchText, setSearchText] = useState('');
 
   const filtered = props.cashFlow
       .filter(e => searchText === '' || e.description.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
-      .filter(c => new Date(props.currentTime) > new Date(c.start))
-      .filter(c => c.end === undefined || new Date(props.currentTime).getTime() < new Date(c.end).getTime())
+      .filter(c => filterActive(props.currentTime, c))
 
   const entries = filtered
       .map((c) => {
@@ -114,7 +114,6 @@ const FinancialDataPage: React.FC<Props> = (props) => {
                                rate={ e.rate }/>)
         }
       </IonList>) }
-
 
       <IonActionSheet
           isOpen={ showActionSheet }

@@ -24,8 +24,17 @@ export const rate = (time: CustomDate, timeFrame: TimeFrame, entry: CashFlowEntr
   const timeFrameSeconds = calculateTimeFrameSeconds(timeFrame, time);
   const monetaryAmountPerTimeframe = multiply(monetaryAmountPerSecond, timeFrameSeconds)
 
+  let amount;
+  if (entry.recurrence.type === 'continuous') {
+    amount = monetaryAmountPerTimeframe.amount
+  } else if (entry.recurrence.type === 'one-time') {
+    amount = Math.min(monetaryAmountPerTimeframe.amount, entry.amount.amount)
+  } else {
+    throw new Error(`Unknown recurrence type for entry ${ JSON.stringify(entry) }`)
+  }
+
   return {
-    amount: monetaryAmountPerTimeframe.amount,
+    amount: amount,
     currency: monetaryAmountPerTimeframe.currency,
     timeFrame: timeFrame
   }

@@ -1,7 +1,7 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon } from "@ionic/react";
 import React from "react";
 import { close } from "ionicons/icons";
-import store from "../../../store";
+import store from "../../../store/store";
 import { setShowTip } from "../../../store/settings/settings.actions";
 
 const Tip: React.FC = () => {

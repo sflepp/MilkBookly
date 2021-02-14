@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore } from "@reduxjs/toolkit";
-import rootReducer from "./store/reducer";
+import rootReducer from "./reducer";
 
 import { load, save } from "redux-localstorage-simple"
 
@@ -14,8 +14,8 @@ const store = createStoreWithMiddleware(
 )
 
 if (process.env.NODE_ENV === "development" && module.hot) {
-  module.hot.accept("./store/reducer", () => {
-    const newRootReducer = require("./store/reducer").default;
+  module.hot.accept("./reducer", () => {
+    const newRootReducer = require("./reducer").default;
     store.replaceReducer(newRootReducer);
   });
 }

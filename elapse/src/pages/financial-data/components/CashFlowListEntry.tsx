@@ -5,7 +5,7 @@ import IncomeRate from "./IncomeRate";
 import { CashFlowEntry } from "../../../store/finance/finance.state";
 import { MonetaryAmountRate } from "../../../model/MonetaryAmountRate.model";
 import { TimeFrame } from "../../../model/TimeFrame.model";
-import store from "../../../store";
+import store from "../../../store/store";
 import { removeCashFlowEntry } from "../../../store/finance/finance.actions";
 import { CustomDate } from "../../../model/CustomDate";
 
@@ -40,7 +40,7 @@ const CashFlowListEntry: React.FC<Props> = (props) => {
             { props.entry.end && <span style={ {
               color: 'grey',
               fontSize: '0.85em'
-            } }>Amortisiert am { new Date(props.entry.end).toLocaleDateString('de-CH') }</span> }
+            } }>{new Date(props.entry.start).toLocaleDateString('de-CH')} bis { new Date(props.entry.end).toLocaleDateString('de-CH') }</span> }
           </IonLabel>
           <IonLabel slot="end" style={ { textAlign: 'right', flex: '0 0 110px' } }>
             <IncomeRate time={props.time} others={ props.others } cashFlow={ props.entry } timeFrame={ props.timeFrame }/>

@@ -2,10 +2,12 @@ import { MonetaryAmount } from "../../model/MonetaryAmount.model";
 import { TimeFrame } from "../../model/TimeFrame.model";
 import { CashFlowEntryType } from "../../model/CashFlowEntryType.model";
 import { CashFlowEntryCategory } from "../../model/CashFlowEntryCategory.model";
-import { CustomDate } from "../../model/CustomDate";
+import { CustomDate, isAfter, isBefore } from "../../model/CustomDate";
+import { cash } from "ionicons/icons";
 
 export interface FinanceState {
   cashFlow: CashFlowEntry[]
+  capital: CapitalEntry[]
 }
 
 export interface CashFlowEntry {
@@ -17,6 +19,12 @@ export interface CashFlowEntry {
   type: CashFlowEntryType
   amount: MonetaryAmount
   recurrence: Recurrence
+}
+
+export interface CapitalEntry {
+  id?: UUID,
+  date: CustomDate
+  amount: MonetaryAmount
 }
 
 export type UUID = string
@@ -36,5 +44,8 @@ export interface ContinuousRecurrence {
   repetition: TimeFrame
 }
 
+export const filterActive = (currentTime: CustomDate, cashFlow: CashFlowEntry) => {
+  return isAfter(cashFlow.start, currentTime) && (cashFlow.end === undefined || isBefore(cashFlow.end, currentTime))
+}
 
 

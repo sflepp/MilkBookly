@@ -21,7 +21,7 @@ import { close } from "ionicons/icons";
 import { Controller, useForm } from "react-hook-form";
 import MonetaryInput from "../../../components/MonetaryInput";
 import TimeFrameInput from "../../../components/TimeFrameInput";
-import store from "../../../store";
+import store from "../../../store/store";
 import { addCashFlowEntry } from "../../../store/finance/finance.actions";
 import { TimeFrame } from "../../../model/TimeFrame.model";
 import { MonetaryAmount } from "../../../model/MonetaryAmount.model";

@@ -4,7 +4,8 @@ import { setCurrentTime, setUseFakeTime, tickTime } from "./enviornment.actions"
 
 const initialEnvironmentState: EnvironmentState = {
   currentTime: new Date().toISOString(),
-  useFakeTime: true
+  useFakeTime: false,
+  dataModelVersion: 1
 }
 
 export const EnvironmentReducer = createReducer(initialEnvironmentState, (builder) => {

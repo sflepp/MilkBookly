@@ -1,57 +1,42 @@
 import { CustomDate } from "./CustomDate";
 
-export type TimeFrame = 'YEAR' | 'MONTH' | 'WEEK' | 'DAY' | 'HOUR' | 'MINUTE' | 'SECOND'
+export type TimeFrame = 'YEAR' | 'MONTH' | 'WEEK' | 'DAY'
 
-export const AllTimeFrames: TimeFrame[] = ['YEAR', 'MONTH', 'WEEK', 'DAY', 'HOUR', 'MINUTE', 'SECOND']
+export const AllTimeFrames: TimeFrame[] = ['YEAR', 'MONTH', 'WEEK', 'DAY']
 
 export const TimeFrameTranslationsAdjective: { [key: string]: string } = {
   'YEAR': 'Jährlich',
   'MONTH': 'Monatlich',
   'WEEK': 'Wöchentlich',
-  'DAY': 'Täglich',
-  'HOUR': 'Stündlich',
-  'MINUTE': 'Minütlich',
-  'SECOND': 'Sekündlich'
+  'DAY': 'Täglich'
 }
 
 export const TimeFrameAbbrevations: { [key: string]: string } = {
   'YEAR': 'Y',
   'MONTH': 'M',
   'WEEK': 'W',
-  'DAY': 'd',
-  'HOUR': 'h',
-  'MINUTE': 'min',
-  'SECOND': 's'
+  'DAY': 'd'
 }
 
 export const TimeFrameTranslationsNoun: { [key: string]: string } = {
   'YEAR': 'Jahr',
   'MONTH': 'Monat',
   'WEEK': 'Woche',
-  'DAY': 'Tag',
-  'HOUR': 'Stunde',
-  'MINUTE': 'Minute',
-  'SECOND': 'Sekunde'
+  'DAY': 'Tag'
 }
 
 export const TimeFrameTranslationsNounPlural: { [key: string]: string } = {
   'YEAR': 'Jahre',
   'MONTH': 'Monate',
   'WEEK': 'Wochen',
-  'DAY': 'Tage',
-  'HOUR': 'Stunden',
-  'MINUTE': 'Minuten',
-  'SECOND': 'Sekunden'
+  'DAY': 'Tage'
 }
 
 export const StartOfTimeFrameTranslations: { [key: string]: string } = {
   'YEAR': 'Dieses Jahr',
   'MONTH': 'Diesen Monat',
   'WEEK': 'Diese Woche',
-  'DAY': 'Heute',
-  'HOUR': 'Diese Stunde',
-  'MINUTE': 'Diese Minute',
-  'SECOND': 'Jetzt'
+  'DAY': 'Heute'
 }
 
 export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: CustomDate): number => {
@@ -67,12 +52,6 @@ export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: Custo
       return 3600 * 24 * 7;
     case "DAY":
       return 3600 * 24;
-    case "HOUR":
-      return 3600;
-    case "MINUTE":
-      return 60
-    case "SECOND":
-      return 1;
   }
 }
 
@@ -92,15 +71,6 @@ export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeF
       break;
     case "DAY":
       startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
-      break;
-    case "HOUR":
-      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours());
-      break;
-    case "MINUTE":
-      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours(), nowDate.getMinutes())
-      break;
-    case "SECOND":
-      startOfTimeFrame = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours(), nowDate.getMinutes(), nowDate.getSeconds())
       break;
   }
 

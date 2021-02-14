@@ -17,7 +17,7 @@ import './SettingsPage.css';
 import { connect } from "react-redux";
 import { RootState } from "../../store/reducer";
 import { AllCurrencies, Currency } from "../../model/MonetaryAmount.model";
-import store from "../../store";
+import store from "../../store/store";
 import {
   setPreferredCurrency,
   setPreferredTimeFrame,
@@ -54,6 +54,33 @@ const SettingsPage: React.FC<Props> = (props) => {
   const [timeCache, setTimeCache] = useState<CustomDate>(props.currentTime)
   const [useFakeTimeCache, setUseFakeTimeCache] = useState<boolean>(props.useFakeTime)
 
+  const [devCounter, setDevCounter] = useState<number>(0)
+
+  const DevSettings = () => (<>
+        <br/>
+
+        <IonItem>
+          <IonLabel><IonText><h1>Development Settings</h1></IonText></IonLabel>
+        </IonItem>
+        <IonItem>
+          <IonLabel>Fake time</IonLabel>
+          <IonToggle slot="end" checked={ useFakeTimeCache }
+                     onIonChange={ (e) => {
+                       setUseFakeTimeCache(e.detail.checked)
+                       store.dispatch(setUseFakeTime(e.detail.checked))
+                     } }/>
+        </IonItem>
+        <IonItem>
+          <IonLabel>Aktuelles Datum</IonLabel>
+          <IonDatetime displayFormat="DD.MM.YYYY" max="2030" placeholder="Select Date" value={ timeCache }
+                       onIonChange={ e => {
+                         setTimeCache(e.detail.value!);
+                         store.dispatch(setCurrentTime(e.detail.value!))
+                       } }/>
+        </IonItem>
+      </>
+  )
+
   return (
       <IonPage>
         <IonHeader>
@@ -64,7 +91,7 @@ const SettingsPage: React.FC<Props> = (props) => {
         <IonContent fullscreen>
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonTitle size="large">Einstellungen</IonTitle>
+              <IonTitle size="large" onClick={() => setDevCounter(devCounter + 1)}>Einstellungen</IonTitle>
             </IonToolbar>
           </IonHeader>
 
@@ -101,27 +128,8 @@ const SettingsPage: React.FC<Props> = (props) => {
                        onIonChange={ (e) => store.dispatch(setShowTip(e.detail.checked)) }/>
           </IonItem>
 
-          <br />
+          { devCounter >= 10 && <DevSettings />}
 
-          <IonItem>
-            <IonLabel><IonText><h1>Development Settings</h1></IonText></IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Fake time</IonLabel>
-            <IonToggle slot="end" checked={ useFakeTimeCache }
-                       onIonChange={ (e) => {
-                         setUseFakeTimeCache(e.detail.checked)
-                         store.dispatch(setUseFakeTime(e.detail.checked))
-                       } }/>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Aktuelles Datum (dev)</IonLabel>
-            <IonDatetime displayFormat="DD.MM.YYYY" max="2030" placeholder="Select Date" value={ timeCache }
-                         onIonChange={ e => {
-                           setTimeCache(e.detail.value!);
-                           store.dispatch(setCurrentTime(e.detail.value!))
-                         } }/>
-          </IonItem>
         </IonContent>
       </IonPage>
   );

@@ -5,19 +5,15 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonIcon,
-  IonItem,
-  IonLabel
+  IonIcon
 } from "@ionic/react";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import MonetaryInput from "../../../components/MonetaryInput";
 import { checkmark } from "ionicons/icons";
-import TimeFrameInput from "../../../components/TimeFrameInput";
-import './WizardWage.css';
+import './WizardCapital.css';
 import store from "../../../store/store";
-import { addCashFlowEntry } from "../../../store/finance/finance.actions";
-import { TimeFrame } from "../../../model/TimeFrame.model";
+import { addCapitalEntry } from "../../../store/finance/finance.actions";
 import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
 import { CustomDate } from "../../../model/CustomDate";
 import { RootState } from "../../../store/reducer";
@@ -28,7 +24,6 @@ interface Props {
 }
 
 interface FormData {
-  period: TimeFrame
   amount: MonetaryAmount
 }
 
@@ -45,28 +40,20 @@ const WizardWage: React.FC<Props> = (props) => {
         amount: 0,
         currency: 'CHF'
       },
-      period: 'MONTH',
     }
   });
 
   const onSubmit = (data: FormData) => {
-    store.dispatch(addCashFlowEntry({
-      description: 'Lohn',
-      type: 'income',
-      category: 'wage',
-      amount: data.amount,
-      start: props.currentTime,
-      recurrence: {
-        type: 'continuous',
-        repetition: data.period
-      },
+    store.dispatch(addCapitalEntry({
+      date: props.currentTime,
+      amount: data.amount
     }))
   }
 
   return (<IonCard>
     <IonCardHeader>
-      <IonCardSubtitle>Lohn</IonCardSubtitle>
-      <IonCardTitle>Was ist dein aktueller Lohn?</IonCardTitle>
+      <IonCardSubtitle>Vermögen</IonCardSubtitle>
+      <IonCardTitle>Wie ist dein aktueller Kontostand?</IonCardTitle>
     </IonCardHeader>
 
     <IonCardContent>
@@ -78,17 +65,6 @@ const WizardWage: React.FC<Props> = (props) => {
                 <MonetaryInput value={ value } onChange={ onChange }/>
             }
         />
-        <Controller
-            name="period"
-            control={ control }
-            render={ ({ onChange, value }) =>
-                <IonItem>
-                  <IonLabel>Wiederholung</IonLabel>
-                  <TimeFrameInput value={ value } onChange={ onChange }/>
-                </IonItem>
-            }
-        />
-
         <IonButton type="submit" className="ok-button">
           <IonIcon slot="icon-only" icon={ checkmark }/>
         </IonButton>

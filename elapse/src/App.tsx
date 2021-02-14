@@ -28,7 +28,7 @@ import { RootState } from "./store/reducer";
 import { connect } from "react-redux";
 import ChartsPage from "./pages/charts/ChartsPage";
 import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
-import store from "./store";
+import store from "./store/store";
 import { tickTime } from "./store/enviornment/enviornment.actions";
 import { CustomDate } from "./model/CustomDate";
 
@@ -62,8 +62,7 @@ const App: React.FC<Props> = (props) => {
           <Route exact path="/wizard">
             <WizardPage/>
           </Route>
-          <Route path="/charts">
-            <ChartsPage/>
+          <Route exact path="/charts" render={() => <ChartsPage/>}>
           </Route>
           <Route exact path="/financial-data">
             <FinancialDataPage/>
