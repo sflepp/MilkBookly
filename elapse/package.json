@@ -74,5 +74,5 @@
     "@types/react-redux": "^7.1.16",
     "@types/webpack-env": "^1.16.0"
   },
-  "description": "An Ionic project"
+  "description": "A simplified view to your finances"
 }

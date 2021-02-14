@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "elapse",
+  "appId": "io.plain-vanilla.elapse",
+  "appName": "Elapse",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
