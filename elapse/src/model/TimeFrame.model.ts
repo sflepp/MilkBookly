@@ -44,8 +44,9 @@ export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: Custo
   switch (timeFrame) {
     case "YEAR":
       const year = referenceDate.getFullYear();
-      const daysInYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0) ? 366 : 365;
-      return daysInYear * 3600 * 24;
+      const firstOfYear = new Date(year, 0, 1).getTime();
+      const lastOfYear = new Date(year, 11, 31, 23, 59, 59, 999).getTime()
+      return (lastOfYear - firstOfYear) / 1000
     case "MONTH":
       return new Date(referenceDate.getFullYear(), referenceDate.getMonth() + 1, 0).getDate() * 3600 * 24;
     case "WEEK":
@@ -55,7 +56,28 @@ export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: Custo
   }
 }
 
-export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeFrame) => {
+export const calculateTimeFrameYears = (timeFrame: TimeFrame, reference: CustomDate): number => {
+  const referenceDate = new Date(reference);
+  const isLeapYear = (year: number) => {
+    return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
+  }
+  const daysOfYear = (year: number) => {
+    return isLeapYear(year) ? 366 : 365
+  }
+
+  switch (timeFrame) {
+    case 'YEAR':
+      return 1;
+    case 'MONTH':
+      return 1 / 12
+    case 'WEEK':
+      return 1 / daysOfYear(referenceDate.getFullYear()) * 7;
+    case 'DAY':
+      return 1 / daysOfYear(referenceDate.getFullYear());
+  }
+}
+
+export const startOfTimeFrame = (now: CustomDate, timeFrame: TimeFrame): CustomDate => {
   const nowDate = new Date(now);
   let startOfTimeFrame: Date;
   switch (timeFrame) {
@@ -74,5 +96,12 @@ export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeF
       break;
   }
 
-  return (nowDate.getTime() - startOfTimeFrame.getTime()) / 1000;
+  return startOfTimeFrame.toISOString()
+}
+
+export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeFrame) => {
+  const nowDate = new Date(now);
+  const start = new Date(startOfTimeFrame(now, timeFrame))
+
+  return (nowDate.getTime() - start.getTime()) / 1000;
 }

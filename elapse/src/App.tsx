@@ -1,36 +1,30 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
-/* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
-
-/* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
+import '@ionic/react/css/display.css';
+import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/float-elements.css';
+import '@ionic/react/css/normalize.css';
+import '@ionic/react/css/padding.css';
+import '@ionic/react/css/structure.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+import '@ionic/react/css/typography.css';
+import { cogOutline, pulseOutline, readerOutline } from "ionicons/icons";
+import React, { useEffect } from 'react';
+import { connect } from "react-redux";
+import { Redirect, Route } from "react-router-dom";
+import { CustomDate } from "./model/CustomDate";
+import ChartsPage from "./pages/charts/ChartsPage";
+import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
+import SettingsPage from "./pages/settings/SettingsPage";
+import { tickTime } from "./store/enviornment/enviornment.actions";
+import { RootState } from "./store/reducer";
+import store from "./store/store";
 
 /* Theme variables */
 import './theme/variables.css';
-import React, { useEffect } from 'react';
-import { Redirect, Route } from "react-router-dom";
-import WizardPage from "./pages/wizard/WizardPage";
-import SettingsPage from "./pages/settings/SettingsPage";
-import { cogOutline, colorWand, pulseOutline, readerOutline } from "ionicons/icons";
-import { RootState } from "./store/reducer";
-import { connect } from "react-redux";
-import ChartsPage from "./pages/charts/ChartsPage";
-import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
-import store from "./store/store";
-import { tickTime } from "./store/enviornment/enviornment.actions";
-import { CustomDate } from "./model/CustomDate";
 
 interface Props {
   showWizard: boolean,
@@ -59,9 +53,6 @@ const App: React.FC<Props> = (props) => {
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/wizard">
-            <WizardPage/>
-          </Route>
           <Route exact path="/charts" render={() => <ChartsPage/>}>
           </Route>
           <Route exact path="/financial-data">
@@ -71,21 +62,18 @@ const App: React.FC<Props> = (props) => {
             <SettingsPage/>
           </Route>
           <Route exact path="/">
-            <Redirect to={ props.showWizard ? '/wizard' : '/chart' }/>
+            <Redirect to="/chart"/>
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          { props.showWizard && <IonTabButton tab="wizard" href="/wizard">
-              <IonIcon icon={ colorWand }/>
-          </IonTabButton> }
           <IonTabButton tab="chart" href="/charts">
-            <IonIcon icon={ pulseOutline }/>
+            <IonIcon icon={pulseOutline}/>
           </IonTabButton>
           <IonTabButton tab="overview-list" href="/financial-data">
-            <IonIcon icon={ readerOutline }/>
+            <IonIcon icon={readerOutline}/>
           </IonTabButton>
           <IonTabButton tab="settings" href="/settings">
-            <IonIcon icon={ cogOutline }/>
+            <IonIcon icon={cogOutline}/>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

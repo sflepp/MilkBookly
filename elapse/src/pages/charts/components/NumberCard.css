@@ -9,6 +9,12 @@
     color: black;
 }
 
+@media (prefers-color-scheme: dark) {
+    .number {
+        color: white;
+    }
+}
+
 .unit {
     font-weight: bold;
 }
