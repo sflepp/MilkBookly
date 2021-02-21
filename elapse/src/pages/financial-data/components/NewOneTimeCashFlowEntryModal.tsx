@@ -46,6 +46,20 @@ interface FormData {
   type: CashFlowEntryType
   amount: MonetaryAmount,
   amortization: number // seconds
+  amortizationSlider: number
+}
+
+const logSlider = (position: number) => {
+  // position will be between 0 and 100
+  var minp = 1;
+  var maxp = 100;
+
+  var minv = Math.log(1)
+  var maxv = Math.log(750)
+
+  var scale = (maxv - minv) / (maxp - minp);
+
+  return Math.exp(minv + scale * (position - minp))
 }
 
 const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
@@ -64,7 +78,8 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
         amount: 0,
         currency: 'CHF'
       },
-      amortization: 0
+      amortization: 0,
+      amortizationSlider: 50
     }
   });
 
@@ -140,26 +155,30 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                     control={control}
                     render={({ onChange, value }) =>
                       <MonetaryInput value={value} onChange={(value) => {
-                        const untilAmortized = secondsUntilAmortized(value, currentRate, currentTime)
+                        const untilAmortized = currentRate.amount > 0 ? secondsUntilAmortized(value, currentRate, currentTime) :  24 * 60 * 60; // one day
                         onChange(value)
                         setUntilAmortized(untilAmortized)
-                        setAmortization(timeFrameAmountCeil(untilAmortized * 50))
-                        setValue('amortization', untilAmortized * 50)
-
+                        setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(50)))
+                        setValue('amortization', untilAmortized * logSlider(50))
+                        setValue('amortizationSlider', 50)
                       }}/>
                     }
                   />
 
-                  {!isNaN(untilAmortized) && untilAmortized > 0 && <>
+                  {!isNaN(untilAmortized) && untilAmortized !== 0 && <>
                       <IonListHeader style={{ marginTop: '16px' }}>
                           Amortisation <br/>
                       </IonListHeader>
                       <IonItem>
-                          <p style={{ margin: '16px 0' }}>
-                              Mit Ihrer aktuellen Sparquote benötigen Sie mindestens&nbsp;
-                              <b><SecondsFormatter amountOfSeconds={untilAmortized}/></b>
-                              für die Amortisation.
-                          </p>
+                        {currentRate.amount > 0 && <p style={{ margin: '16px 0' }}>
+                            Mit Ihrer aktuellen Sparquote benötigen Sie mindestens&nbsp;
+                            <b><SecondsFormatter amountOfSeconds={untilAmortized}/></b>
+                            für die Amortisation.
+                        </p>}
+                        {currentRate.amount < 0 && <p style={{ margin: '16px 0', color: 'red' }}>
+                            Sie können es sich eigentlich nicht leisten. Sie haben eine negative
+                            Sparquote. {title} wirkt sich negativ auf Ihr Erspartes aus.
+                        </p>}
                       </IonItem>
 
                       <IonItem>
@@ -171,14 +190,15 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                       <IonItem>
 
                           <Controller
-                              name={"amortization"}
+                              name={"amortizationSlider"}
                               control={control}
                               render={({ onChange, value }) =>
-                                <IonRange value={value / untilAmortized} min={1} max={99} step={1}
+                                <IonRange value={value} min={1} max={100} step={1}
                                           onIonChange={(event) => {
                                             const value = event.detail.value as number;
-                                            onChange(value * untilAmortized)
-                                            setAmortization(timeFrameAmountCeil(untilAmortized * value))
+                                            onChange(value)
+                                            setValue('amortization', untilAmortized * logSlider(value))
+                                            setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(value)))
                                           }}/>
                               }
                           />

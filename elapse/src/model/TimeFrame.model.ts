@@ -115,10 +115,9 @@ export const timeFrameAmountCeil = (amountOfSeconds: number): TimeFrameAmount =>
 
   const oneYear = 365 * 24 * 60 * 60
   const oneMonth = (365 / 12) * 24 * 60 * 60
-  const oneWeek = 7 * 24 * 60 * 60
   const oneDay = 24 * 60 * 60
 
-  if (amountOfSeconds > oneYear * 2) {
+  if (amountOfSeconds > oneYear) {
     const years = Math.ceil(amountOfSeconds / oneYear)
 
     return {
@@ -127,21 +126,12 @@ export const timeFrameAmountCeil = (amountOfSeconds: number): TimeFrameAmount =>
     }
   }
 
-  if (amountOfSeconds > oneMonth * 2) {
+  if (amountOfSeconds > oneMonth) {
     const months = Math.ceil(amountOfSeconds / oneMonth);
 
     return {
       timeFrame: 'MONTH',
       amount: months
-    }
-  }
-
-  if (amountOfSeconds > oneWeek * 2) {
-    const weeks = Math.ceil(amountOfSeconds / oneWeek);
-
-    return {
-      timeFrame: 'WEEK',
-      amount: weeks
     }
   }
 
