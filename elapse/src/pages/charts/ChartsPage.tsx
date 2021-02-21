@@ -34,9 +34,9 @@ const ChartsPage: React.FC<Props> = (props) => {
     wizard = 'wage'
   } /* else if (props.capital.length === 0 && props.showWizard) {
     wizard = 'capital'
-  } else   {
+  }*/  else   {
     wizard = 'tip'
-  } */
+  }
 
   return (
     <IonPage>

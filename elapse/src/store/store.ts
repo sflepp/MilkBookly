@@ -28,6 +28,28 @@ const migrate = () => {
       window.localStorage.setItem('redux_localstorage_simple', JSON.stringify(data))
       console.log('udpate written 1 => 2')
     }
+
+    if (data.environment.dataModelVersion === 2) {
+      console.log('updating version 2 => 3')
+      // Set start date of continous to 2021
+      data.finance.cashFlow = data.finance.cashFlow.map((cf: CashFlowEntry): CashFlowEntry => {
+        if (cf.recurrence.type === 'continuous') {
+          return {
+            ...cf,
+            start: new Date(2021, 0, 1).toISOString()
+          }
+        }
+
+        return cf;
+      })
+
+      data.environment.dataModelVersion = 3
+
+      window.localStorage.setItem('redux_localstorage_simple', JSON.stringify(data))
+      console.log('udpate written 2 => 3')
+    }
+
+
   }
 }
 migrate();
