@@ -38,7 +38,7 @@ const mapStateToProps = (state: RootState): Props => {
   }
 }
 
-const App: React.FC<Props> = (props) => {
+const App: React.FC<Props> = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       store.dispatch(tickTime())
@@ -63,11 +63,11 @@ const App: React.FC<Props> = (props) => {
             <SettingsPage/>
           </Route>
           <Route exact path="/">
-            <Redirect to="/chart"/>
+            <Redirect to="/charts"/>
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="chart" href="/charts">
+          <IonTabButton tab="charts" href="/charts">
             <IonIcon icon={pulseOutline}/>
           </IonTabButton>
           <IonTabButton tab="overview-list" href="/financial-data">

@@ -1,1 +1,1 @@
-export type CashFlowEntryCategory = 'wage'
+export type CashFlowEntryCategory = 'wage' | 'unknown'

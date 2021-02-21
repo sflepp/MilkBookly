@@ -5,6 +5,8 @@
   "dependencies": {
     "@capacitor/core": "2.4.6",
     "@capacitor/ios": "^2.4.6",
+    "@ionic-native/core": "^5.5.0",
+    "@ionic-native/in-app-purchase": "^5.31.1",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@nivo/core": "^0.67.0",
@@ -20,6 +22,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "cordova-plugin-inapppurchase": "^1.2.0",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

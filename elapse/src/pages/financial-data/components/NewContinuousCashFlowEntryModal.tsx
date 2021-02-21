@@ -61,7 +61,7 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
       description: data.description,
       start: props.currentTime,
       type: data.type,
-      category: 'wage',
+      category: 'unknown',
       amount: data.amount,
       recurrence: {
         type: 'continuous',

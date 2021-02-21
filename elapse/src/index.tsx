@@ -1,22 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from "react-redux";
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { CashFlowEntry } from './store/finance/finance.state'
 import store from "./store/store";
+
+
 
 
 const render = () => {
   ReactDOM.render(
-      <React.StrictMode>
-        <Provider store={ store }>
-          <App/>
-        </Provider>
-      </React.StrictMode>,
-      document.getElementById('root')
+    <React.StrictMode>
+      <Provider store={store}>
+        <App/>
+      </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
   );
 }
+
 
 render();
 

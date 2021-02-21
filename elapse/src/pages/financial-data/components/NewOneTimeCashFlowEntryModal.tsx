@@ -72,7 +72,7 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
     store.dispatch(addCashFlowEntry({
       description: data.description,
       type: data.type,
-      category: 'wage',
+      category: 'unknown',
       amount: data.amount,
       start: currentTime,
       end: addNTimeFrames(currentTime, amortization.timeFrame, amortization.amount),
