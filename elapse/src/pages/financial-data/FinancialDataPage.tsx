@@ -66,7 +66,7 @@ const FinancialDataPage: React.FC<Props> = (props) => {
     { showModal === 'continuous' &&
     <NewContinuousCashFlowEntryModal currentTime={ props.currentTime } onClose={ () => setShowModal(undefined) }/> }
     { showModal === 'one-time' &&
-    <NewOneTimeCashFlowEntryModal currentTime={ props.currentTime } onClose={ () => setShowModal(undefined) }/> }
+    <NewOneTimeCashFlowEntryModal onClose={ () => setShowModal(undefined) }/> }
     <IonHeader>
       <IonToolbar>
         <IonTitle>Finanzdaten</IonTitle>

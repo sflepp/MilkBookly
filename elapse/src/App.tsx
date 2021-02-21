@@ -53,7 +53,8 @@ const App: React.FC<Props> = (props) => {
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/charts" render={() => <ChartsPage/>}>
+          <Route exact path="/charts">
+            <ChartsPage/>
           </Route>
           <Route exact path="/financial-data">
             <FinancialDataPage/>

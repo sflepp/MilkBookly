@@ -1,13 +1,15 @@
 import { CashFlowEntry } from "../store/finance/finance.state";
 import { CustomDate } from "./CustomDate";
-import { Currency, devide, multiply } from "./MonetaryAmount.model";
-import { calculateTimeFrameYears, TimeFrame } from "./TimeFrame.model";
+import { Currency, devide, MonetaryAmount, multiply } from "./MonetaryAmount.model";
+import { calculateTimeFrameSeconds, calculateTimeFrameYears, TimeFrame } from "./TimeFrame.model";
 
 export interface MonetaryAmountRate {
   amount: number,
   currency: Currency,
   timeFrame: TimeFrame
 }
+
+
 
 export const rate = (time: CustomDate, timeFrame: TimeFrame, entry: CashFlowEntry): MonetaryAmountRate => {
   let entryTimeFrameYears: number;
@@ -38,4 +40,24 @@ export const rate = (time: CustomDate, timeFrame: TimeFrame, entry: CashFlowEntr
     currency: monetaryAmountPerTimeframe.currency,
     timeFrame: timeFrame
   }
+}
+
+export const convertRate = (time: CustomDate, rate: MonetaryAmountRate, to: TimeFrame) => {
+  const rateTimeFrameYears = calculateTimeFrameYears(rate.timeFrame, time);
+  const toTimeFrameYears = calculateTimeFrameYears(to, time);
+
+  const monetaryAmountPerYear = devide(rate, rateTimeFrameYears);
+  const monetaryAmountPerTimeframe = multiply(monetaryAmountPerYear, toTimeFrameYears);
+
+  return {
+    amount: monetaryAmountPerTimeframe.amount,
+    currency: rate.currency,
+    timeFrame: to
+  }
+}
+
+export const secondsUntilAmortized = (amount: MonetaryAmount, currentRate: MonetaryAmountRate, reference: CustomDate): number => {
+  const yearlyRate = convertRate(reference, currentRate, 'YEAR')
+  const yersUntilAmortized = amount.amount / yearlyRate.amount
+  return yersUntilAmortized * calculateTimeFrameSeconds('YEAR', reference)
 }

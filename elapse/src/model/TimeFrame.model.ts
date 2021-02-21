@@ -39,6 +39,11 @@ export const StartOfTimeFrameTranslations: { [key: string]: string } = {
   'DAY': 'Heute'
 }
 
+export interface TimeFrameAmount {
+  timeFrame: TimeFrame,
+  amount: number
+}
+
 export const calculateTimeFrameSeconds = (timeFrame: TimeFrame, reference: CustomDate): number => {
   const referenceDate = new Date(reference);
   switch (timeFrame) {
@@ -105,3 +110,45 @@ export const currentTimeFrameElapsedSeconds = (now: CustomDate, timeFrame: TimeF
 
   return (nowDate.getTime() - start.getTime()) / 1000;
 }
+
+export const timeFrameAmountCeil = (amountOfSeconds: number): TimeFrameAmount => {
+
+  const oneYear = 365 * 24 * 60 * 60
+  const oneMonth = (365 / 12) * 24 * 60 * 60
+  const oneWeek = 7 * 24 * 60 * 60
+  const oneDay = 24 * 60 * 60
+
+  if (amountOfSeconds > oneYear * 2) {
+    const years = Math.ceil(amountOfSeconds / oneYear)
+
+    return {
+      timeFrame: 'YEAR',
+      amount: years
+    }
+  }
+
+  if (amountOfSeconds > oneMonth * 2) {
+    const months = Math.ceil(amountOfSeconds / oneMonth);
+
+    return {
+      timeFrame: 'MONTH',
+      amount: months
+    }
+  }
+
+  if (amountOfSeconds > oneWeek * 2) {
+    const weeks = Math.ceil(amountOfSeconds / oneWeek);
+
+    return {
+      timeFrame: 'WEEK',
+      amount: weeks
+    }
+  }
+
+  const days = Math.ceil(amountOfSeconds / oneDay)
+
+  return {
+    timeFrame: 'DAY',
+    amount: days
+  }
+};
