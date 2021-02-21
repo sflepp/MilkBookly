@@ -17,7 +17,7 @@ import TimeFrameInput from "../../../components/TimeFrameInput";
 import './WizardWage.css';
 import store from "../../../store/store";
 import { addCashFlowEntry } from "../../../store/finance/finance.actions";
-import { TimeFrame } from "../../../model/TimeFrame.model";
+import { startOfTimeFrame, TimeFrame } from "../../../model/TimeFrame.model";
 import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
 import { CustomDate } from "../../../model/CustomDate";
 import { RootState } from "../../../store/reducer";
@@ -55,7 +55,7 @@ const WizardWage: React.FC<Props> = (props) => {
       type: 'income',
       category: 'wage',
       amount: data.amount,
-      start: props.currentTime,
+      start: startOfTimeFrame(props.currentTime, 'YEAR'),
       recurrence: {
         type: 'continuous',
         repetition: data.period

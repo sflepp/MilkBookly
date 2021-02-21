@@ -67,6 +67,7 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
   const currentTime = useSelector<RootState, CustomDate>(state => state.environment.currentTime)
 
   const [title, setTitle] = useState<string>();
+  const [type, setType] = useState<CashFlowEntryType>('expense')
   const [amortization, setAmortization] = useState<TimeFrameAmount>({ timeFrame: 'DAY', amount: 0 })
   const [untilAmortized, setUntilAmortized] = useState<number>(0)
   const { handleSubmit, control, setValue } = useForm<FormData>({
@@ -146,7 +147,10 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                     render={({ onChange, value }) =>
                       <IonItem>
                         <IonLabel>Typ</IonLabel>
-                        <CashFlowEntryTypeInput value={value} onChange={onChange}/>
+                        <CashFlowEntryTypeInput value={value} onChange={(v) => {
+                          onChange(v)
+                          setType(v)
+                        }}/>
                       </IonItem>
                     }
                   />
@@ -169,17 +173,17 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                       <IonListHeader style={{ marginTop: '16px' }}>
                           Amortisation <br/>
                       </IonListHeader>
-                      <IonItem>
+                      {type === 'expense' && <IonItem>
                         {currentRate.amount > 0 && <p style={{ margin: '16px 0' }}>
-                            Mit Ihrer aktuellen Sparquote benötigen Sie mindestens&nbsp;
+                            Mit deiner aktuellen Sparquote benötigst du mindestens&nbsp;
                             <b><SecondsFormatter amountOfSeconds={untilAmortized}/></b>
                             für die Amortisation.
                         </p>}
                         {currentRate.amount < 0 && <p style={{ margin: '16px 0', color: 'red' }}>
-                            Sie können es sich eigentlich nicht leisten. Sie haben eine negative
-                            Sparquote. {title} wirkt sich negativ auf Ihr Erspartes aus.
+                            Du kannst es dir eigentlich nicht leisten. Du hast eine negative
+                            Sparquote. {title} wirkt sich negativ auf dein Erspartes aus.
                         </p>}
-                      </IonItem>
+                      </IonItem> }
 
                       <IonItem>
                           <IonLabel>Amortisation</IonLabel>

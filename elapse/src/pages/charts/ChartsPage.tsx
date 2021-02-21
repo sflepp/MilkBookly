@@ -34,9 +34,9 @@ const ChartsPage: React.FC<Props> = (props) => {
     wizard = 'wage'
   } /* else if (props.capital.length === 0 && props.showWizard) {
     wizard = 'capital'
-  }*/ else   {
+  } else   {
     wizard = 'tip'
-  }
+  } */
 
   return (
     <IonPage>
@@ -48,7 +48,7 @@ const ChartsPage: React.FC<Props> = (props) => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large"><span style={{ position: 'relative', top: '1px' }}>Übersicht</span></IonTitle>
+            <IonTitle size="large"><span style={{ position: 'relative', top: '3px' }}>Übersicht</span></IonTitle>
           </IonToolbar>
         </IonHeader>
         {wizard === 'wage' && <WizardWage/>}

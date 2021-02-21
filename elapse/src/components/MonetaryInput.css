@@ -8,3 +8,15 @@
 .currency {
     margin-right: 10px;
 }
+
+input {
+    border: none;
+    width: 100px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
