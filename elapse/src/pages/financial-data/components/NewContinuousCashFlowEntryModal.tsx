@@ -56,10 +56,12 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
     }
   });
 
+  const firstOfYear = new Date(new Date(props.currentTime).getFullYear(), 0, 1).toISOString()
+
   const onSubmit = (data: FormData) => {
     store.dispatch(addCashFlowEntry({
       description: data.description,
-      start: props.currentTime,
+      start: firstOfYear,
       type: data.type,
       category: 'unknown',
       amount: data.amount,

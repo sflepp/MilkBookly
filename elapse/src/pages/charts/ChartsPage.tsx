@@ -5,7 +5,6 @@ import { CapitalEntry, CashFlowEntry } from '../../store/finance/finance.state'
 import { RootState } from '../../store/reducer'
 import './ChartsPage.css';
 import LiveIncome from "./components/LiveIncome";
-import Tip from './components/Tip'
 import TotalIncomeRate from "./components/TotalIncomeRate";
 import WizardCapital from './components/WizardCapital'
 import WizardWage from './components/WizardWage'
@@ -34,30 +33,29 @@ const ChartsPage: React.FC<Props> = (props) => {
     wizard = 'wage'
   } /* else if (props.capital.length === 0 && props.showWizard) {
     wizard = 'capital'
-  }*/  else   {
+  }*/ else {
     wizard = 'tip'
   }
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Übersicht</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
+      <IonPage>
+        <IonHeader>
           <IonToolbar>
-            <IonTitle size="large"><span style={{ position: 'relative', top: '3px' }}>Übersicht</span></IonTitle>
+            <IonTitle>Übersicht</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {wizard === 'wage' && <WizardWage/>}
-        {wizard === 'capital' && <WizardCapital/>}
-        <TotalIncomeRate/>
-        <LiveIncome/>
-        {wizard === 'tip' && props.showTip && <Tip/>}
-      </IonContent>
-    </IonPage>
+        <IonContent fullscreen>
+          <IonHeader collapse="condense">
+            <IonToolbar>
+              <IonTitle size="large"><span style={ { position: 'relative', top: '3px' } }>Übersicht</span></IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          { wizard === 'wage' && <WizardWage/> }
+          { wizard === 'capital' && <WizardCapital/> }
+          <TotalIncomeRate/>
+          <LiveIncome/>
+        </IonContent>
+      </IonPage>
   );
 };
 

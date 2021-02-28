@@ -5,7 +5,7 @@ import rootReducer from "./reducer";
 import { load, save } from "redux-localstorage-simple"
 
 
-const migrate = () => {
+/* const migrate = () => {
   const localStorageData = window.localStorage.getItem('redux_localstorage_simple')
 
   if (localStorageData !== null) {
@@ -48,11 +48,9 @@ const migrate = () => {
       window.localStorage.setItem('redux_localstorage_simple', JSON.stringify(data))
       console.log('udpate written 2 => 3')
     }
-
-
   }
 }
-migrate();
+migrate(); */
 
 const createStoreWithMiddleware
     = applyMiddleware(

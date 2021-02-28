@@ -25,6 +25,8 @@ import store from "./store/store";
 
 /* Theme variables */
 import './theme/variables.css';
+import './App.css';
+import Tip from "./modal/Tip/Tip";
 
 interface Props {
   showWizard: boolean,
@@ -39,16 +41,6 @@ const mapStateToProps = (state: RootState): Props => {
 }
 
 const App: React.FC<Props> = () => {
-  useEffect(() => {
-    const interval = setInterval(() => {
-      store.dispatch(tickTime())
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    }
-  }, [])
-
   return (<IonApp>
     <IonReactRouter>
       <IonTabs>
@@ -68,17 +60,18 @@ const App: React.FC<Props> = () => {
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="charts" href="/charts">
-            <IonIcon icon={pulseOutline}/>
+            <IonIcon icon={ pulseOutline }/>
           </IonTabButton>
           <IonTabButton tab="overview-list" href="/financial-data">
-            <IonIcon icon={readerOutline}/>
+            <IonIcon icon={ readerOutline }/>
           </IonTabButton>
           <IonTabButton tab="settings" href="/settings">
-            <IonIcon icon={cogOutline}/>
+            <IonIcon icon={ cogOutline }/>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>
+    <Tip/>
   </IonApp>)
 }
 
