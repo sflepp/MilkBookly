@@ -37,7 +37,8 @@ interface FormData {
 const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
 
   const [title, setTitle] = useState<string>();
-  const { handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, control, errors } = useForm<FormData>({
+    mode: 'onChange',
     defaultValues: {
       description: '',
       type: 'expense',
@@ -48,6 +49,8 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
       period: 'MONTH',
     }
   });
+
+  console.log(errors)
 
   const firstOfYear = new Date(new Date(props.currentTime).getFullYear(), 0, 1).toISOString()
 
@@ -93,9 +96,10 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
               <Controller
                 name="description"
                 control={control}
-                render={({ onChange, value }) =>
+                rules={{ required: true }}
+                render={({ onChange, value }, { invalid}) =>
                   <IonItem>
-                    <IonLabel>Beschreibung</IonLabel>
+                    <IonLabel color={invalid ? 'danger' : undefined}>Beschreibung</IonLabel>
                     <IonInput style={{ textAlign: 'right' }} value={value}
                               ref={descriptionRef}
                               onIonChange={(e) => {
@@ -108,9 +112,10 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
               <Controller
                 name="type"
                 control={control}
-                render={({ onChange, value }) =>
+                rules={{ required: true }}
+                render={({ onChange, value }, {invalid}) =>
                   <IonItem>
-                    <IonLabel>Typ</IonLabel>
+                    <IonLabel color={invalid ? 'danger' : undefined}>Typ</IonLabel>
                     <CashFlowEntryTypeInput value={value} onChange={onChange}/>
                   </IonItem>
                 }
@@ -118,16 +123,18 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
               <Controller
                 name="amount"
                 control={control}
-                render={({ onChange, value }) =>
-                  <MonetaryInput value={value} onChange={onChange}/>
+                rules={{ required: true, validate: (v) => v.amount > 0 }}
+                render={({ onChange, value }, {invalid}) =>
+                  <MonetaryInput invalid={invalid} value={value} onChange={onChange}/>
                 }
               />
               <Controller
                 name="period"
                 control={control}
-                render={({ onChange, value }) =>
+                rules={{ required: true }}
+                render={({ onChange, value }, {invalid}) =>
                   <IonItem>
-                    <IonLabel>Wiederholung</IonLabel>
+                    <IonLabel color={invalid ? 'danger' : undefined}>Wiederholung</IonLabel>
                     <TimeFrameInput translation="adjective" value={value} onChange={onChange}/>
                   </IonItem>
                 }

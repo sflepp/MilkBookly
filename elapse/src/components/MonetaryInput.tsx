@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
 
 interface Props {
+  invalid: boolean
   defaultValue?: MonetaryAmount
   value: MonetaryAmount
   onChange: (value: MonetaryAmount) => void
@@ -28,7 +29,7 @@ const MonetaryInput: React.FC<Props> = (props) => {
   return (
       <>
         <IonItem>
-          <IonLabel>Betrag</IonLabel>
+          <IonLabel color={props.invalid ? 'danger' : undefined}>Betrag</IonLabel>
           <input value={ amount } type="number" step="0.01" inputMode="decimal"
                  style={ { textAlign: 'right', width: '80px'} } onChange={ (e) => {
             onChange(e)

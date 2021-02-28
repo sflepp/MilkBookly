@@ -28,7 +28,6 @@ import { TimeFrameAmount, timeFrameAmountCeil } from "../../../model/TimeFrame.m
 import { addCashFlowEntry } from "../../../store/finance/finance.actions";
 import { selectCurrentTimeFrameRate } from '../../../store/finance/finance.selectors'
 import { RootState } from '../../../store/reducer'
-import { setShowTip } from '../../../store/settings/settings.actions'
 import store from "../../../store/store";
 
 interface Props {
@@ -98,7 +97,7 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
   const descriptionRef = useRef<HTMLIonInputElement>(null)
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if(descriptionRef.current) {
+      if (descriptionRef.current) {
         descriptionRef.current.setFocus()
       }
     }, 1100)
@@ -127,9 +126,10 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                 <Controller
                   name="description"
                   control={control}
-                  render={({ onChange, value }) =>
+                  rules={{required: true}}
+                  render={({ onChange, value }, {invalid}) =>
                     <IonItem>
-                      <IonLabel>Beschreibung</IonLabel>
+                      <IonLabel color={invalid ? 'danger' : undefined}>Beschreibung</IonLabel>
                       <IonInput style={{ textAlign: 'right' }} value={value}
                                 ref={descriptionRef}
                                 onIonChange={(e) => {
@@ -142,9 +142,10 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                 <Controller
                   name="type"
                   control={control}
-                  render={({ onChange, value }) =>
+                  rules={{required: true}}
+                  render={({ onChange, value }, {invalid}) =>
                     <IonItem>
-                      <IonLabel>Typ</IonLabel>
+                      <IonLabel color={invalid ? 'danger' : undefined}>Typ</IonLabel>
                       <CashFlowEntryTypeInput value={value} onChange={(v) => {
                         onChange(v)
                         setType(v)
@@ -155,8 +156,9 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                 <Controller
                   name="amount"
                   control={control}
-                  render={({ onChange, value }) =>
-                    <MonetaryInput value={value} onChange={(value) => {
+                  rules={{required: true, validate: (v) => v.amount > 0}}
+                  render={({ onChange, value }, {invalid}) =>
+                    <MonetaryInput invalid={invalid} value={value} onChange={(value) => {
                       const untilAmortized = currentRate.amount > 0 ? secondsUntilAmortized(value, currentRate, currentTime) : 24 * 60 * 60; // one day
                       onChange(value)
                       setUntilAmortized(untilAmortized)
@@ -194,6 +196,7 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
                         <Controller
                             name={"amortizationSlider"}
                             control={control}
+                            rules={{required: true}}
                             render={({ onChange, value }) =>
                               <IonRange value={value} min={1} max={100} step={1}
                                         onIonChange={(event) => {

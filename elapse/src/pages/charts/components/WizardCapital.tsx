@@ -7,17 +7,17 @@ import {
   IonCardTitle,
   IonIcon
 } from "@ionic/react";
+import { checkmark } from "ionicons/icons";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import MonetaryInput from "../../../components/MonetaryInput";
-import { checkmark } from "ionicons/icons";
-import './WizardCapital.css';
-import store from "../../../store/store";
-import { addCapitalEntry } from "../../../store/finance/finance.actions";
-import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
-import { CustomDate } from "../../../model/CustomDate";
-import { RootState } from "../../../store/reducer";
 import { connect } from "react-redux";
+import MonetaryInput from "../../../components/MonetaryInput";
+import { CustomDate } from "../../../model/CustomDate";
+import { MonetaryAmount } from "../../../model/MonetaryAmount.model";
+import { addCapitalEntry } from "../../../store/finance/finance.actions";
+import { RootState } from "../../../store/reducer";
+import store from "../../../store/store";
+import './WizardCapital.css';
 
 interface Props {
   currentTime: CustomDate
@@ -57,16 +57,17 @@ const WizardWage: React.FC<Props> = (props) => {
     </IonCardHeader>
 
     <IonCardContent>
-      <form onSubmit={ handleSubmit(onSubmit) }>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
-            name="amount"
-            control={ control }
-            render={ ({ onChange, value }) =>
-                <MonetaryInput value={ value } onChange={ onChange }/>
-            }
+          name="amount"
+          control={control}
+          rules={{required: true, validate: (v) => v.amount > 0}}
+          render={({ onChange, value }, { invalid }) =>
+            <MonetaryInput invalid={invalid} value={value} onChange={onChange}/>
+          }
         />
         <IonButton type="submit" className="ok-button">
-          <IonIcon slot="icon-only" icon={ checkmark }/>
+          <IonIcon slot="icon-only" icon={checkmark}/>
         </IonButton>
       </form>
     </IonCardContent>

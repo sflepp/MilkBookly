@@ -1,6 +1,6 @@
 import { InAppPurchase } from '@ionic-native/in-app-purchase'
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonModal } from "@ionic/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { setShowTip } from "../../store/settings/settings.actions";
 import store from "../../store/store";
 import { useSelector } from "react-redux";
@@ -11,13 +11,23 @@ const Tip: React.FC = () => {
   const showTip = useSelector<RootState, boolean>((state) => state.settings.showTip)
   const cashFlowLength = useSelector<RootState, number>((state) => state.finance.cashFlow.length);
 
+  const [threshold, setThreshold] = useState<boolean>(false)
+
+  useEffect(() => {
+    if(cashFlowLength > 5) {
+      setTimeout(() => {
+        setThreshold(true)
+      }, 2000)
+    }
+  }, [cashFlowLength])
+
   const buy = () => {
     InAppPurchase.buy('tip_1_chf')
         .then((data) => console.log(data))
         .catch((data) => console.error(data))
   }
 
-  return <IonModal isOpen={ cashFlowLength > 10 && showTip }
+  return <IonModal isOpen={ threshold && showTip }
                    showBackdrop={ true }
                    cssClass={ "small-modal" }>
     <IonCard>
