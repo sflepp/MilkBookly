@@ -31,10 +31,6 @@ const ChartsPage: React.FC<Props> = (props) => {
   let wizard;
   if (!props.cashFlow.some((c) => c.category === 'wage') && props.showWizard) {
     wizard = 'wage'
-  } /* else if (props.capital.length === 0 && props.showWizard) {
-    wizard = 'capital'
-  }*/ else {
-    wizard = 'tip'
   }
 
   return (

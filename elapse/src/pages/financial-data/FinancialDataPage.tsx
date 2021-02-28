@@ -16,6 +16,7 @@ import {
 import { add, repeat, returnDownBack } from "ionicons/icons";
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import ListItemPlaceHolder from '../../components/ListItemPlaceHolder'
 import { CustomDate } from "../../model/CustomDate";
 import { rate } from "../../model/MonetaryAmountRate.model";
 import { TimeFrame } from "../../model/TimeFrame.model";
@@ -88,7 +89,7 @@ const FinancialDataPage: React.FC<Props> = (props) => {
       <IonToolbar style={{ marginTop: '16px' }}>
         <IonSearchbar placeholder="Suche" onIonChange={e => setSearchText(e.detail.value!)}/>
       </IonToolbar>
-      {income.length > 0 && (<IonList>
+      <IonList>
         <IonListHeader>
           <IonLabel>Einnahmen</IonLabel>
         </IonListHeader>
@@ -100,8 +101,14 @@ const FinancialDataPage: React.FC<Props> = (props) => {
                              entry={e.entry}
                              rate={e.rate}/>)
         }
-      </IonList>)}
-      {expense.length > 0 && (<IonList>
+
+        {income.length === 0 && (<>
+          <ListItemPlaceHolder width={40}/>
+          <ListItemPlaceHolder width={25}/>
+          <ListItemPlaceHolder width={75}/>
+        </>)}
+      </IonList>
+      <IonList>
         <IonListHeader>
           <IonLabel>Ausgaben</IonLabel>
         </IonListHeader>
@@ -113,7 +120,12 @@ const FinancialDataPage: React.FC<Props> = (props) => {
                              entry={e.entry}
                              rate={e.rate}/>)
         }
-      </IonList>)}
+        {expense.length === 0 && (<>
+          <ListItemPlaceHolder width={45}/>
+          <ListItemPlaceHolder width={65}/>
+          <ListItemPlaceHolder width={35}/>
+        </>)}
+      </IonList>
 
       <IonActionSheet
         isOpen={showActionSheet}

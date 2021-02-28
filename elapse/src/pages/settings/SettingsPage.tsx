@@ -21,7 +21,6 @@ import store from "../../store/store";
 import {
   setPreferredCurrency,
   setPreferredTimeFrame,
-  setShowTip,
   setShowWizard
 } from "../../store/settings/settings.actions";
 import { TimeFrame } from "../../model/TimeFrame.model";
@@ -31,7 +30,6 @@ import { setCurrentTime, setUseFakeTime } from "../../store/enviornment/enviornm
 
 interface Props {
   showWizard: boolean,
-  showTip: boolean,
   preferredCurrency: Currency,
   preferredTimeFrame: TimeFrame,
   currentTime: CustomDate,
@@ -41,7 +39,6 @@ interface Props {
 const mapStateToProps = (state: RootState) => {
   return {
     showWizard: state.settings.showWizard,
-    showTip: state.settings.showTip,
     preferredCurrency: state.settings.preferredCurrency,
     preferredTimeFrame: state.settings.preferredTimeFrame,
     currentTime: state.environment.currentTime,
@@ -120,12 +117,6 @@ const SettingsPage: React.FC<Props> = (props) => {
                            store.dispatch(setShowWizard(e.detail.checked))
                          }
                        } }/>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel>Trinkgeld</IonLabel>
-            <IonToggle slot="end" checked={ props.showTip }
-                       onIonChange={ (e) => store.dispatch(setShowTip(e.detail.checked)) }/>
           </IonItem>
 
           { devCounter >= 10 && <DevSettings />}

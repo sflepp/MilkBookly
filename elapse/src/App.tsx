@@ -41,6 +41,15 @@ const mapStateToProps = (state: RootState): Props => {
 }
 
 const App: React.FC<Props> = () => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      store.dispatch(tickTime())
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  })
+
   return (<IonApp>
     <IonReactRouter>
       <IonTabs>

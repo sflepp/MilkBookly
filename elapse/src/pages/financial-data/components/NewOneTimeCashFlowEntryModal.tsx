@@ -1,26 +1,19 @@
 import {
   IonButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonContent,
-  IonHeader,
-  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
   IonModal,
-  IonRange,
-  IonTitle,
-  IonToolbar
+  IonRange
 } from '@ionic/react';
-import { close } from "ionicons/icons";
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from 'react-redux'
 import CashFlowEntryTypeInput from "../../../components/CashFlowEntryTypeInput";
@@ -35,6 +28,7 @@ import { TimeFrameAmount, timeFrameAmountCeil } from "../../../model/TimeFrame.m
 import { addCashFlowEntry } from "../../../store/finance/finance.actions";
 import { selectCurrentTimeFrameRate } from '../../../store/finance/finance.selectors'
 import { RootState } from '../../../store/reducer'
+import { setShowTip } from '../../../store/settings/settings.actions'
 import store from "../../../store/store";
 
 interface Props {
@@ -101,125 +95,134 @@ const NewOneTimeCashFlowEntryModal: React.FC<Props> = (props) => {
     props.onClose()
   }
 
+  const descriptionRef = useRef<HTMLIonInputElement>(null)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if(descriptionRef.current) {
+        descriptionRef.current.setFocus()
+      }
+    }, 1100)
+    return () => {
+      clearTimeout(timeout)
+    }
+
+  }, [])
+
 
   return (
     <>
-      <IonModal isOpen={true} cssClass='my-custom-class'>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Neuer Eintrag</IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={props.onClose}>
-                <IonIcon icon={close}/>
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonCard>
-              <IonCardHeader>
-                <IonCardSubtitle>Einmalig</IonCardSubtitle>
-                <IonCardTitle>{title || 'Beschreibung'}</IonCardTitle>
-              </IonCardHeader>
+      <IonModal isOpen={true} cssClass={"small-modal"}>
 
-              <IonCardContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonCard>
+            <IonCardHeader>
+              <IonCardSubtitle>Einmalig</IonCardSubtitle>
+              <IonCardTitle>{title || 'Beschreibung'}</IonCardTitle>
+            </IonCardHeader>
 
-                <IonList>
+            <IonCardContent>
 
-                  <Controller
-                    name="description"
-                    control={control}
-                    render={({ onChange, value }) =>
-                      <IonItem>
-                        <IonLabel>Beschreibung</IonLabel>
-                        <IonInput style={{ textAlign: 'right' }} value={value}
-                                  onIonChange={(e) => {
-                                    onChange(e.detail.value!)
-                                    setTitle(e.detail.value!)
-                                  }}/>
-                      </IonItem>
-                    }
-                  />
-                  <Controller
-                    name="type"
-                    control={control}
-                    render={({ onChange, value }) =>
-                      <IonItem>
-                        <IonLabel>Typ</IonLabel>
-                        <CashFlowEntryTypeInput value={value} onChange={(v) => {
-                          onChange(v)
-                          setType(v)
-                        }}/>
-                      </IonItem>
-                    }
-                  />
-                  <Controller
-                    name="amount"
-                    control={control}
-                    render={({ onChange, value }) =>
-                      <MonetaryInput value={value} onChange={(value) => {
-                        const untilAmortized = currentRate.amount > 0 ? secondsUntilAmortized(value, currentRate, currentTime) :  24 * 60 * 60; // one day
-                        onChange(value)
-                        setUntilAmortized(untilAmortized)
-                        setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(50)))
-                        setValue('amortization', untilAmortized * logSlider(50))
-                        setValue('amortizationSlider', 50)
+              <IonList>
+
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ onChange, value }) =>
+                    <IonItem>
+                      <IonLabel>Beschreibung</IonLabel>
+                      <IonInput style={{ textAlign: 'right' }} value={value}
+                                ref={descriptionRef}
+                                onIonChange={(e) => {
+                                  onChange(e.detail.value!)
+                                  setTitle(e.detail.value!)
+                                }}/>
+                    </IonItem>
+                  }
+                />
+                <Controller
+                  name="type"
+                  control={control}
+                  render={({ onChange, value }) =>
+                    <IonItem>
+                      <IonLabel>Typ</IonLabel>
+                      <CashFlowEntryTypeInput value={value} onChange={(v) => {
+                        onChange(v)
+                        setType(v)
                       }}/>
-                    }
-                  />
+                    </IonItem>
+                  }
+                />
+                <Controller
+                  name="amount"
+                  control={control}
+                  render={({ onChange, value }) =>
+                    <MonetaryInput value={value} onChange={(value) => {
+                      const untilAmortized = currentRate.amount > 0 ? secondsUntilAmortized(value, currentRate, currentTime) : 24 * 60 * 60; // one day
+                      onChange(value)
+                      setUntilAmortized(untilAmortized)
+                      setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(50)))
+                      setValue('amortization', untilAmortized * logSlider(50))
+                      setValue('amortizationSlider', 50)
+                    }}/>
+                  }
+                />
 
-                  {!isNaN(untilAmortized) && untilAmortized !== 0 && <>
-                      <IonListHeader style={{ marginTop: '16px' }}>
-                          Amortisation <br/>
-                      </IonListHeader>
-                      {type === 'expense' && <IonItem>
-                        {currentRate.amount > 0 && <p style={{ margin: '16px 0' }}>
-                            Mit deiner aktuellen Sparquote benötigst du mindestens&nbsp;
-                            <b><SecondsFormatter amountOfSeconds={untilAmortized}/></b>
-                            für die Amortisation.
-                        </p>}
-                        {currentRate.amount < 0 && <p style={{ margin: '16px 0', color: 'red' }}>
-                            Du kannst es dir eigentlich nicht leisten. Du hast eine negative
-                            Sparquote. {title} wirkt sich negativ auf dein Erspartes aus.
-                        </p>}
-                      </IonItem> }
+                {!isNaN(untilAmortized) && untilAmortized !== 0 && <>
+                    <IonListHeader style={{ marginTop: '16px' }}>
+                        Amortisation <br/>
+                    </IonListHeader>
+                  {type === 'expense' && <IonItem>
+                    {currentRate.amount > 0 && <p style={{ margin: '16px 0' }}>
+                        Mit deiner aktuellen Sparquote benötigst du mindestens&nbsp;
+                        <b><SecondsFormatter amountOfSeconds={untilAmortized}/></b>
+                        für die Amortisation.
+                    </p>}
+                    {currentRate.amount < 0 && <p style={{ margin: '16px 0', color: 'red' }}>
+                        Du kannst es dir eigentlich nicht leisten. Du hast eine negative
+                        Sparquote. {title} wirkt sich negativ auf dein Erspartes aus.
+                    </p>}
+                  </IonItem>}
 
-                      <IonItem>
-                          <IonLabel>Amortisation</IonLabel>
-                          <IonLabel style={{ textAlign: 'right' }}><TimeFrameAmountFormatter
-                              value={amortization}/></IonLabel>
-                      </IonItem>
+                    <IonItem>
+                        <IonLabel>Amortisation</IonLabel>
+                        <IonLabel style={{ textAlign: 'right' }}><TimeFrameAmountFormatter
+                            value={amortization}/></IonLabel>
+                    </IonItem>
 
-                      <IonItem>
+                    <IonItem>
 
-                          <Controller
-                              name={"amortizationSlider"}
-                              control={control}
-                              render={({ onChange, value }) =>
-                                <IonRange value={value} min={1} max={100} step={1}
-                                          onIonChange={(event) => {
-                                            const value = event.detail.value as number;
-                                            onChange(value)
-                                            setValue('amortization', untilAmortized * logSlider(value))
-                                            setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(value)))
-                                          }}/>
-                              }
-                          />
+                        <Controller
+                            name={"amortizationSlider"}
+                            control={control}
+                            render={({ onChange, value }) =>
+                              <IonRange value={value} min={1} max={100} step={1}
+                                        onIonChange={(event) => {
+                                          const value = event.detail.value as number;
+                                          onChange(value)
+                                          setValue('amortization', untilAmortized * logSlider(value))
+                                          setAmortization(timeFrameAmountCeil(untilAmortized * logSlider(value)))
+                                        }}/>
+                            }
+                        />
 
-                      </IonItem>
-                  </>}
-                </IonList>
+                    </IonItem>
+                </>}
+              </IonList>
 
 
-                <IonButton type="submit" className="ok-button">
-                  Hinzufügen
-                </IonButton>
+              <IonButton type="submit" className="ok-button">
+                Hinzufügen
+              </IonButton>
 
-              </IonCardContent>
-            </IonCard>
-          </form>
-        </IonContent>
+              <IonButton expand="block"
+                         color="light"
+                         onClick={() => {
+                           props.onClose()
+                         }}>Abbrechen</IonButton>
+
+            </IonCardContent>
+          </IonCard>
+        </form>
       </IonModal>
     </>
   )
