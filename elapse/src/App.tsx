@@ -46,7 +46,7 @@ const App: React.FC<Props> = ({ wizardComplete }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       store.dispatch(tickTime())
-    }, 1000)
+    }, 10000)
     return () => {
       clearInterval(interval)
     }

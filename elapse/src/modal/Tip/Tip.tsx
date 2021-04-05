@@ -9,25 +9,20 @@ import { RootState } from "../../store/reducer";
 const Tip: React.FC = () => {
 
   const showTip = useSelector<RootState, boolean>((state) => state.settings.showTip)
-  const cashFlowLength = useSelector<RootState, number>((state) => state.finance.cashFlow.length);
-
-  const [threshold, setThreshold] = useState<boolean>(false)
-
-  useEffect(() => {
-    if(cashFlowLength > 10) {
-      setTimeout(() => {
-        setThreshold(true)
-      }, 2000)
-    }
-  }, [cashFlowLength])
 
   const buy = () => {
     InAppPurchase.buy('tip_1_chf')
-        .then((data) => console.log(data))
-        .catch((data) => console.error(data))
+        .then((data) => {
+          console.log(data)
+          store.dispatch(setShowTip(false))
+        })
+        .catch((data) => {
+          console.error(data)
+          store.dispatch(setShowTip(false))
+        })
   }
 
-  return <IonModal isOpen={ threshold && showTip }
+  return <IonModal isOpen={ showTip }
                    showBackdrop={ true }
                    cssClass={ "small-modal" }>
     <IonCard>
@@ -38,7 +33,7 @@ const Tip: React.FC = () => {
         Diese App ist kostenlos, verwendet kein Tracking und blendet keine
         Werbung ein. Das wird auch immer so bleiben.
         <br/><br/>
-        Wenn dir diese App gefällt und sie dir etwas bringt, würde sich der Entwickler
+        Wenn Dir diese App gefällt und sie Dir etwas bringt, würde sich der Entwickler
         dieser App über ein kleines Trinkgeld freuen, sodass er seine Freundin zu einem
         Abendessen einladen kann.
 

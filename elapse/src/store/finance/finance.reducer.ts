@@ -1,50 +1,60 @@
-import { createReducer } from "@reduxjs/toolkit";
-import { addCapitalEntry, addCashFlowEntry, removeCashFlowEntry } from "./finance.actions";
-import { FinanceState, UUID } from "./finance.state";
+import {createReducer} from "@reduxjs/toolkit";
+import {addCapitalEntry, addCashFlowEntry, removeCashFlowEntry} from "./finance.actions";
+import {FinanceState, UUID} from "./finance.state";
+import store from "../store";
+import {setShowTip} from "../settings/settings.actions";
 
 const initialFinanceState: FinanceState = {
-  cashFlow: [],
-  capital: []
+    cashFlow: [],
+    capital: []
 }
 
 export const FinanceReducer = createReducer(initialFinanceState, (builder) => {
-  builder.addCase(addCashFlowEntry, (state, action) => {
+    builder.addCase(addCashFlowEntry, (state, action) => {
 
-    const cashFlowEntry = {
-      ...action.payload,
-      id: uuid()
-    }
+        const cashFlowEntry = {
+            ...action.payload,
+            id: uuid()
+        }
 
-    return {
-      ...state,
-      cashFlow: [...state.cashFlow, cashFlowEntry]
-    }
-  })
+        const newState = {
+            ...state,
+            cashFlow: [...state.cashFlow, cashFlowEntry]
+        }
 
-  builder.addCase(removeCashFlowEntry, (state, action) => {
-    return {
-      ...state,
-      cashFlow: state.cashFlow.filter(e => e.id !== action.payload)
-    }
-  })
+        if (newState.cashFlow.length === 10) {
+            setTimeout(() => {
+                store.dispatch(setShowTip(true))
+            }, 2000)
+        }
 
-  builder.addCase(addCapitalEntry, (state, action) => {
-    const capitalEntry = {
-      ...action.payload,
-      id: uuid()
-    }
+        return newState;
+    })
 
-    return {
-      ...state,
-      capital: [...state.capital, capitalEntry]
-    }
-  })
+    builder.addCase(removeCashFlowEntry, (state, action) => {
+        return {
+            ...state,
+            cashFlow: state.cashFlow.filter(e => e.id !== action.payload)
+        }
+    })
+
+    builder.addCase(addCapitalEntry, (state, action) => {
+        const capitalEntry = {
+            ...action.payload,
+            id: uuid()
+        }
+
+        return {
+            ...state,
+            capital: [...state.capital, capitalEntry]
+        }
+    })
 })
 
 
 function uuid(): UUID {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
