@@ -1,5 +1,5 @@
 import { IonItem, IonLabel } from '@ionic/react';
-import React, { ChangeEvent, useState } from 'react';
+import React, {ChangeEvent, useRef, useState} from 'react';
 import './MonetaryInput.css';
 import { Currency, MonetaryAmount } from "../model/MonetaryAmount.model";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const MonetaryInput: React.FC<Props> = (props) => {
 
   const [amount, setAmount] = useState<string>(props.value.amount === 0 ? '' : props.value.amount + '')
   const currency = useSelector<RootState, Currency>(state => state.settings.preferredCurrency)
+  const ref = useRef<HTMLInputElement>(null);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -29,12 +30,13 @@ const MonetaryInput: React.FC<Props> = (props) => {
   return (
       <>
         <IonItem>
-          <IonLabel color={props.invalid ? 'danger' : undefined}>Betrag</IonLabel>
-          <input value={ amount } type="number" step="0.01" inputMode="decimal"
-                 style={ { textAlign: 'right', width: '80px'} } onChange={ (e) => {
+          <IonLabel onClick={() => ref.current?.focus()} color={props.invalid ? 'danger' : undefined}>Betrag</IonLabel>
+          <span className="currency" onClick={() => ref.current?.focus()}>CHF</span>
+          <input ref={ref} value={ amount } type="number" step="0.01" inputMode="decimal"
+                 style={ { marginLeft: '5px', textAlign: 'right', width: Math.max(amount.toString().length * 12.5, 10) + 'px'} } onChange={ (e) => {
             onChange(e)
           } }/>
-          <span className="currency">CHF</span>
+
         </IonItem>
       </>
   );

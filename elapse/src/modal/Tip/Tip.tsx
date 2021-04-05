@@ -14,7 +14,7 @@ const Tip: React.FC = () => {
   const [threshold, setThreshold] = useState<boolean>(false)
 
   useEffect(() => {
-    if(cashFlowLength > 5) {
+    if(cashFlowLength > 10) {
       setTimeout(() => {
         setThreshold(true)
       }, 2000)
@@ -49,7 +49,7 @@ const Tip: React.FC = () => {
                    color="light"
                    onClick={ () => {
                      store.dispatch(setShowTip(false))
-                   } }>Nein Danke.</IonButton>
+                   } }>Nein, danke.</IonButton>
       </IonCardContent>
     </IonCard>
   </IonModal>

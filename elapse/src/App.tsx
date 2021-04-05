@@ -19,6 +19,7 @@ import { CustomDate } from "./model/CustomDate";
 import ChartsPage from "./pages/charts/ChartsPage";
 import FinancialDataPage from "./pages/financial-data/FinancialDataPage";
 import SettingsPage from "./pages/settings/SettingsPage";
+import WizardPage from './pages/wizard/WizardPage'
 import { tickTime } from "./store/enviornment/enviornment.actions";
 import { RootState } from "./store/reducer";
 import store from "./store/store";
@@ -29,18 +30,19 @@ import './App.css';
 import Tip from "./modal/Tip/Tip";
 
 interface Props {
-  showWizard: boolean,
+  wizardComplete: boolean
   currentTime: CustomDate
 }
 
 const mapStateToProps = (state: RootState): Props => {
   return {
-    showWizard: state.settings.showWizard,
+    wizardComplete: state.environment.wizardComplete,
     currentTime: state.environment.currentTime
   }
 }
 
-const App: React.FC<Props> = () => {
+const App: React.FC<Props> = ({ wizardComplete }) => {
+
   useEffect(() => {
     const interval = setInterval(() => {
       store.dispatch(tickTime())
@@ -48,10 +50,10 @@ const App: React.FC<Props> = () => {
     return () => {
       clearInterval(interval)
     }
-  })
+  }, [])
 
   return (<IonApp>
-    <IonReactRouter>
+    { wizardComplete && <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
           <Route exact path="/charts">
@@ -79,7 +81,8 @@ const App: React.FC<Props> = () => {
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
-    </IonReactRouter>
+    </IonReactRouter> }
+    { !wizardComplete && <WizardPage /> }
     <Tip/>
   </IonApp>)
 }

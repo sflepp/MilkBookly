@@ -1,0 +1,18 @@
+.ok-button {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.skip-button {
+    width: 100%;
+}
+
+.wizard-form ion-item {
+    padding-left: 0;
+    margin-left: -18px;
+}
+
+.wizard-form {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

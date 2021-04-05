@@ -59,7 +59,6 @@ const NewContinuousCashFlowEntryModal: React.FC<Props> = (props) => {
       description: data.description,
       start: firstOfYear,
       type: data.type,
-      category: 'unknown',
       amount: data.amount,
       recurrence: {
         type: 'continuous',

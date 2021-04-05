@@ -1,9 +1,7 @@
 import { MonetaryAmount } from "../../model/MonetaryAmount.model";
 import { TimeFrame } from "../../model/TimeFrame.model";
 import { CashFlowEntryType } from "../../model/CashFlowEntryType.model";
-import { CashFlowEntryCategory } from "../../model/CashFlowEntryCategory.model";
 import { CustomDate, isAfter, isBefore } from "../../model/CustomDate";
-import { cash } from "ionicons/icons";
 
 export interface FinanceState {
   cashFlow: CashFlowEntry[]
@@ -15,7 +13,6 @@ export interface CashFlowEntry {
   description: string
   start: CustomDate
   end?: CustomDate
-  category: CashFlowEntryCategory
   type: CashFlowEntryType
   amount: MonetaryAmount
   recurrence: Recurrence

@@ -1,11 +1,12 @@
 import { EnvironmentState } from "./environment.state";
 import { createReducer } from "@reduxjs/toolkit";
-import { setCurrentTime, setUseFakeTime, tickTime } from "./enviornment.actions";
+import { setCurrentTime, setUseFakeTime, setWizardComplete, tickTime } from "./enviornment.actions";
 
 const initialEnvironmentState: EnvironmentState = {
   currentTime: new Date().toISOString(),
   useFakeTime: false,
-  dataModelVersion: 3
+  dataModelVersion: 3,
+  wizardComplete: false
 }
 
 export const EnvironmentReducer = createReducer(initialEnvironmentState, (builder) => {
@@ -36,6 +37,13 @@ export const EnvironmentReducer = createReducer(initialEnvironmentState, (builde
         ...state,
         currentTime: new Date().toISOString()
       }
+    }
+  })
+
+  builder.addCase(setWizardComplete, (state, action) => {
+    return {
+      ...state,
+      wizardComplete: action.payload
     }
   })
 })

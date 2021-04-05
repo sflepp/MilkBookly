@@ -6,8 +6,8 @@ import { RootState } from '../../store/reducer'
 import './ChartsPage.css';
 import LiveIncome from "./components/LiveIncome";
 import TotalIncomeRate from "./components/TotalIncomeRate";
-import WizardCapital from './components/WizardCapital'
-import WizardWage from './components/WizardWage'
+import WizardCapital from '../wizard/components/WizardCapital'
+import WizardWage from '../wizard/components/WizardContinuous'
 
 interface Props {
   cashFlow: CashFlowEntry[]
@@ -27,12 +27,6 @@ const mapStateToProps = (state: RootState) => {
 
 
 const ChartsPage: React.FC<Props> = (props) => {
-
-  let wizard;
-  if (!props.cashFlow.some((c) => c.category === 'wage') && props.showWizard) {
-    wizard = 'wage'
-  }
-
   return (
       <IonPage>
         <IonHeader>
@@ -46,8 +40,6 @@ const ChartsPage: React.FC<Props> = (props) => {
               <IonTitle size="large"><span style={ { position: 'relative', top: '3px' } }>Übersicht</span></IonTitle>
             </IonToolbar>
           </IonHeader>
-          { wizard === 'wage' && <WizardWage/> }
-          { wizard === 'capital' && <WizardCapital/> }
           <TotalIncomeRate/>
           <LiveIncome/>
         </IonContent>
