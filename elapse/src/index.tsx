@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import { CashFlowEntry } from './store/finance/finance.state'
 import store from "./store/store";
 
 

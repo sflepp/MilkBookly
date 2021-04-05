@@ -5,7 +5,7 @@ import { setCurrentTime, setUseFakeTime, setWizardComplete, tickTime } from "./e
 const initialEnvironmentState: EnvironmentState = {
   currentTime: new Date().toISOString(),
   useFakeTime: false,
-  dataModelVersion: 3,
+  dataModelVersion: 4,
   wizardComplete: false
 }
 

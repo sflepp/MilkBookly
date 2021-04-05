@@ -5,7 +5,7 @@ import { setPreferredCurrency, setPreferredTimeFrame, setShowTip, setShowWizard 
 const initialSettingsState: SettingsState = {
   preferredCurrency: 'CHF',
   preferredTimeFrame: 'DAY',
-  showTip: true,
+  showTip: false,
   showWizard: true
 }
 
