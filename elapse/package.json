@@ -25,6 +25,7 @@
     "cordova-plugin-inapppurchase": "^1.2.0",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
+    "react-currency-input-field": "^3.3.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.15.1",
     "react-redux": "^7.2.2",
